@@ -1,0 +1,90 @@
+[
+  {
+    "name": "move to start goes to the start of the component's own group",
+    "manifest": "page",
+    "operations": [{ "type": "move", "id": "visitors", "position": "start" }],
+    "expect": { "order": ["search", "theme", "profile", "download", "revenue", "sales", "visitors", "referrers"] }
+  },
+  {
+    "name": "move to end goes to the end of the component's own group",
+    "manifest": "page",
+    "operations": [{ "type": "move", "id": "revenue", "position": "end" }],
+    "expect": { "order": ["search", "theme", "profile", "download", "sales", "revenue", "referrers", "visitors"] }
+  },
+  {
+    "name": "move to end passes a member of the group that cannot move itself",
+    "manifest": "page",
+    "operations": [{ "type": "move", "id": "search", "position": "end" }],
+    "expect": { "order": ["theme", "profile", "search", "download", "revenue", "sales", "referrers", "visitors"] }
+  },
+  {
+    "name": "move to start in a group of one leaves the order as it was",
+    "manifest": "page",
+    "operations": [{ "type": "move", "id": "download", "position": "start" }],
+    "expect": {}
+  },
+  {
+    "name": "move before a target in the same group",
+    "manifest": "page",
+    "operations": [{ "type": "move", "id": "sales", "position": "before", "targetId": "revenue" }],
+    "expect": { "order": ["search", "theme", "profile", "download", "sales", "revenue", "referrers", "visitors"] }
+  },
+  {
+    "name": "reorder within one group",
+    "manifest": "page",
+    "operations": [{ "type": "reorder", "ids": ["visitors", "referrers"] }],
+    "expect": { "order": ["search", "theme", "profile", "download", "revenue", "sales", "visitors", "referrers"] }
+  },
+  {
+    "name": "a component with a size is resized as in a grid",
+    "manifest": "page",
+    "operations": [{ "type": "resize", "id": "revenue", "w": 6 }],
+    "expect": { "items": { "revenue": { "w": 6, "h": 2, "hidden": false, "props": {} } } }
+  },
+  {
+    "name": "reset restores a component that has no size",
+    "manifest": "page",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "page",
+      "manifestVersion": "1",
+      "order": ["search", "theme", "profile", "download", "revenue", "sales", "referrers", "visitors"],
+      "items": {
+        "search": { "hidden": true, "props": {} },
+        "theme": { "hidden": false, "props": {} },
+        "profile": { "hidden": false, "props": {} },
+        "download": { "hidden": false, "props": {} },
+        "revenue": { "w": 3, "h": 2, "hidden": false, "props": {} },
+        "sales": { "w": 3, "h": 2, "hidden": false, "props": {} },
+        "referrers": { "w": 6, "h": 4, "hidden": false, "props": {} },
+        "visitors": { "w": 6, "h": 4, "hidden": false, "props": {} }
+      }
+    },
+    "operations": [{ "type": "reset", "id": "search" }],
+    "expect": { "items": { "search": { "hidden": false, "props": {} } } }
+  },
+  {
+    "name": "a move before a component in another group is refused",
+    "manifest": "page",
+    "operations": [{ "type": "move", "id": "referrers", "position": "before", "targetId": "revenue" }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_target", "message": "\"referrers\" can only be moved among the components in its own group, and \"revenue\" is in another" }] }
+  },
+  {
+    "name": "a component in a group cannot be moved next to one in no group",
+    "manifest": "page",
+    "operations": [{ "type": "move", "id": "search", "position": "after", "targetId": "download" }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_target", "message": "\"search\" can only be moved among the components in its own group, and \"download\" is in another" }] }
+  },
+  {
+    "name": "a reorder across groups is refused",
+    "manifest": "page",
+    "operations": [{ "type": "reorder", "ids": ["revenue", "referrers"] }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_operation", "message": "\"revenue\" and \"referrers\" are in different groups; components can only be put in order among those in their own group" }] }
+  },
+  {
+    "name": "a component without a size cannot be resized",
+    "manifest": "page",
+    "operations": [{ "type": "resize", "id": "search", "w": 2 }],
+    "expect": { "errors": [{ "index": 0, "code": "capability_not_allowed", "message": "\"search\" cannot be resized" }] }
+  }
+]

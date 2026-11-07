@@ -1,0 +1,21 @@
+{
+  "regionId": "tabs",
+  "version": "2",
+  "columns": 12,
+  "components": [
+    {
+      "id": "revenue",
+      "kind": "chart",
+      "title": "Revenue",
+      "capabilities": { "move": true, "hide": true, "resize": { "minW": 4, "maxW": 12, "minH": 2, "maxH": 6 } },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": {} }
+    },
+    {
+      "id": "sales",
+      "kind": "list",
+      "title": "Recent sales",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": {} }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "regionId": "dashboard",
+  "version": "1",
+  "columns": 12,
+  "components": [
+    {
+      "id": "balance",
+      "kind": "stat",
+      "title": "Account balance",
+      "locked": true,
+      "capabilities": { "move": false, "hide": false },
+      "defaults": { "w": 12, "h": 1, "hidden": false, "props": {} }
+    },
+    {
+      "id": "revenue",
+      "kind": "chart",
+      "title": "Revenue by month",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "resize": { "minW": 4, "maxW": 12, "minH": 2, "maxH": 6 },
+        "props": { "chartType": { "values": ["bar", "line", "area"] } }
+      },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } }
+    },
+    {
+      "id": "txns",
+      "kind": "table",
+      "title": "Recent transactions",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "resize": { "minW": 6, "maxW": 12, "minH": 2, "maxH": 8 },
+        "props": {
+          "density": { "values": ["compact", "comfortable"] },
+          "pageSize": { "values": [10, 25, 50] }
+        }
+      },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } }
+    },
+    {
+      "id": "alerts",
+      "kind": "list",
+      "title": "Alerts",
+      "capabilities": { "move": false, "hide": false },
+      "defaults": { "w": 12, "h": 2, "hidden": false, "props": {} }
+    },
+    {
+      "id": "notes",
+      "kind": "card",
+      "title": "Notes",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "props": { "pinned": { "values": [true, false] } }
+      },
+      "defaults": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+    }
+  ]
+}

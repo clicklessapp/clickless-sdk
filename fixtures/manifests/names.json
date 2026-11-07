@@ -1,0 +1,32 @@
+{
+  "regionId": "names",
+  "version": "1",
+  "columns": 12,
+  "components": [
+    {
+      "id": "constructor",
+      "kind": "card",
+      "title": "Builder",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "props": { "toString": { "values": ["short", "long"] } }
+      },
+      "defaults": { "w": 6, "h": 2, "hidden": false, "props": { "toString": "short" } }
+    },
+    {
+      "id": "toString",
+      "kind": "card",
+      "title": "Summary",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 2, "hidden": false, "props": {} }
+    },
+    {
+      "id": "valueOf",
+      "kind": "card",
+      "title": "Worth",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 12, "h": 1, "hidden": false, "props": {} }
+    }
+  ]
+}

@@ -1,0 +1,484 @@
+[
+  {
+    "name": "a colour prop accepts any colour written as #rrggbb",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "#7b2ff7"
+      }
+    ],
+    "expect": {
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#7b2ff7",
+            "rows": 10,
+            "opacity": 1,
+            "stripes": "none"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a colour may use capital letters",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "#7B2FF7"
+      }
+    ],
+    "expect": {
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#7B2FF7",
+            "rows": 10,
+            "opacity": 1,
+            "stripes": "none"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a colour outside the suggested ones is accepted",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "#000000"
+      }
+    ],
+    "expect": {
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#000000",
+            "rows": 10,
+            "opacity": 1,
+            "stripes": "none"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a number prop accepts any value in its range",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": 15
+      }
+    ],
+    "expect": {
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#1c5cab",
+            "rows": 15,
+            "opacity": 1,
+            "stripes": "none"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a number prop accepts its limits",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": 5
+      },
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": 50
+      }
+    ],
+    "expect": {
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#1c5cab",
+            "rows": 50,
+            "opacity": 1,
+            "stripes": "none"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a number prop without `integer` accepts fractions",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "opacity",
+        "value": 0.35
+      }
+    ],
+    "expect": {
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#1c5cab",
+            "rows": 10,
+            "opacity": 0.35,
+            "stripes": "none"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "typed and listed props change together",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "#b91c1c"
+      },
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": 40
+      },
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "stripes",
+        "value": "grey"
+      }
+    ],
+    "expect": {
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#b91c1c",
+            "rows": 40,
+            "opacity": 1,
+            "stripes": "grey"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a colour name is not a colour code",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "purple"
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"accent\" of \"table\" must be a colour written as #rrggbb"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a three-digit colour code",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "#fff"
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"accent\" of \"table\" must be a colour written as #rrggbb"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a colour code with a letter past f",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "#12345g"
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"accent\" of \"table\" must be a colour written as #rrggbb"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a colour code without the hash",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "7b2ff7"
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"accent\" of \"table\" must be a colour written as #rrggbb"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a colour code with transparency",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": "#7b2ff780"
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"accent\" of \"table\" must be a colour written as #rrggbb"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a number for a colour prop",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "accent",
+        "value": 123456
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"accent\" of \"table\" must be a colour written as #rrggbb"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a number below the minimum",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": 4
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"rows\" of \"table\" must be a whole number from 5 to 50"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a number above the maximum",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": 51
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"rows\" of \"table\" must be a whole number from 5 to 50"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a fraction for a whole-number prop",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": 12.5
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"rows\" of \"table\" must be a whole number from 5 to 50"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a numeric string for a number prop",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": "12"
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"rows\" of \"table\" must be a whole number from 5 to 50"
+        }
+      ]
+    }
+  },
+  {
+    "name": "true is not a number",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": true
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"rows\" of \"table\" must be a whole number from 5 to 50"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a fraction above the maximum",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "opacity",
+        "value": 1.5
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"opacity\" of \"table\" must be a number from 0 to 1"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a list for a number prop",
+    "manifest": "styles",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "table",
+        "prop": "rows",
+        "value": [
+          10
+        ]
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"rows\" of \"table\" must be a whole number from 5 to 50"
+        }
+      ]
+    }
+  }
+]

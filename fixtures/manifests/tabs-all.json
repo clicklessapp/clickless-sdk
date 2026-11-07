@@ -1,0 +1,39 @@
+{
+  "regionId": "tabs",
+  "version": "1",
+  "columns": 12,
+  "components": [
+    {
+      "id": "revenue",
+      "kind": "chart",
+      "title": "Revenue",
+      "capabilities": { "move": true, "hide": true, "resize": { "minW": 4, "maxW": 12, "minH": 2, "maxH": 6 } },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": {} }
+    },
+    {
+      "id": "sales",
+      "kind": "list",
+      "title": "Recent sales",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": {} }
+    },
+    {
+      "id": "referrers",
+      "kind": "chart",
+      "title": "Referrers",
+      "capabilities": { "move": true, "hide": true, "resize": { "minW": 4, "maxW": 12, "minH": 2, "maxH": 6 } },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": {} }
+    },
+    {
+      "id": "devices",
+      "kind": "table",
+      "title": "Devices",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "props": { "columns": { "values": ["name", "visits", "share"], "multiple": true } }
+      },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["name", "visits"] } }
+    }
+  ]
+}

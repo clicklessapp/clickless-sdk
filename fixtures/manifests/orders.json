@@ -1,0 +1,42 @@
+{
+  "regionId": "orders",
+  "version": "1",
+  "columns": 12,
+  "components": [
+    {
+      "id": "orders",
+      "kind": "table",
+      "title": "Orders",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "props": {
+          "columns": {
+            "values": ["id", "customer", "status", "total", "date"],
+            "multiple": true,
+            "min": 1
+          },
+          "tags": { "values": ["new", "late", "vip"], "multiple": true },
+          "sortBy": { "values": ["date", "total"] }
+        }
+      },
+      "defaults": {
+        "w": 12,
+        "h": 4,
+        "hidden": false,
+        "props": {
+          "columns": ["id", "customer", "status", "total", "date"],
+          "tags": [],
+          "sortBy": "date"
+        }
+      }
+    },
+    {
+      "id": "summary",
+      "kind": "card",
+      "title": "Summary",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 12, "h": 1, "hidden": false, "props": {} }
+    }
+  ]
+}

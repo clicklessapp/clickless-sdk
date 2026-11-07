@@ -1,0 +1,138 @@
+{
+  "regionId": "dashboard",
+  "version": "2",
+  "columns": 12,
+  "components": [
+    {
+      "id": "balance",
+      "kind": "stat",
+      "title": "Account balance",
+      "locked": true,
+      "capabilities": {
+        "move": false,
+        "hide": false
+      },
+      "defaults": {
+        "w": 12,
+        "h": 1,
+        "hidden": false,
+        "props": {}
+      }
+    },
+    {
+      "id": "revenue",
+      "kind": "chart",
+      "title": "Revenue by month",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "resize": {
+          "minW": 8,
+          "maxW": 12,
+          "minH": 2,
+          "maxH": 6
+        },
+        "props": {
+          "chartType": {
+            "values": [
+              "line",
+              "area"
+            ]
+          }
+        }
+      },
+      "defaults": {
+        "w": 8,
+        "h": 3,
+        "hidden": false,
+        "props": {
+          "chartType": "line"
+        }
+      }
+    },
+    {
+      "id": "forecast",
+      "kind": "chart",
+      "title": "Forecast",
+      "capabilities": {
+        "move": true,
+        "hide": true
+      },
+      "defaults": {
+        "w": 4,
+        "h": 3,
+        "hidden": false,
+        "props": {}
+      }
+    },
+    {
+      "id": "txns",
+      "kind": "table",
+      "title": "Recent transactions",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "resize": {
+          "minW": 6,
+          "maxW": 12,
+          "minH": 2,
+          "maxH": 8
+        },
+        "props": {
+          "density": {
+            "values": [
+              "compact",
+              "comfortable"
+            ]
+          },
+          "pageSize": {
+            "values": [
+              25,
+              50,
+              100
+            ]
+          }
+        }
+      },
+      "defaults": {
+        "w": 6,
+        "h": 3,
+        "hidden": false,
+        "props": {
+          "density": "comfortable",
+          "pageSize": 25
+        }
+      }
+    },
+    {
+      "id": "alerts",
+      "kind": "list",
+      "title": "Alerts",
+      "capabilities": {
+        "move": false,
+        "hide": false
+      },
+      "defaults": {
+        "w": 12,
+        "h": 2,
+        "hidden": false,
+        "props": {}
+      }
+    },
+    {
+      "id": "summary",
+      "kind": "card",
+      "title": "Summary",
+      "capabilities": {
+        "move": true,
+        "hide": true
+      },
+      "defaults": {
+        "w": 12,
+        "h": 1,
+        "hidden": false,
+        "props": {}
+      }
+    }
+  ]
+}

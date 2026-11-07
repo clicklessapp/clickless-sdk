@@ -1,0 +1,70 @@
+{
+  "regionId": "page",
+  "version": "1",
+  "columns": 12,
+  "components": [
+    {
+      "id": "search",
+      "kind": "header tool",
+      "title": "Search",
+      "group": "header",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "hidden": false, "props": {} }
+    },
+    {
+      "id": "theme",
+      "kind": "header tool",
+      "title": "Theme switch",
+      "group": "header",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "hidden": false, "props": {} }
+    },
+    {
+      "id": "profile",
+      "kind": "menu",
+      "title": "Profile menu",
+      "group": "header",
+      "capabilities": { "move": false, "hide": false },
+      "defaults": { "hidden": false, "props": {} }
+    },
+    {
+      "id": "download",
+      "kind": "button",
+      "title": "Download",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "hidden": false, "props": {} }
+    },
+    {
+      "id": "revenue",
+      "kind": "stat card",
+      "title": "Total Revenue",
+      "group": "overview-cards",
+      "capabilities": { "move": true, "hide": true, "resize": { "minW": 2, "maxW": 12, "minH": 2, "maxH": 3 } },
+      "defaults": { "w": 3, "h": 2, "hidden": false, "props": {} }
+    },
+    {
+      "id": "sales",
+      "kind": "stat card",
+      "title": "Sales",
+      "group": "overview-cards",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 3, "h": 2, "hidden": false, "props": {} }
+    },
+    {
+      "id": "referrers",
+      "kind": "list",
+      "title": "Referrers",
+      "group": "analytics-cards",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 4, "hidden": false, "props": {} }
+    },
+    {
+      "id": "visitors",
+      "kind": "chart",
+      "title": "Visitors",
+      "group": "analytics-cards",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 4, "hidden": false, "props": {} }
+    }
+  ]
+}

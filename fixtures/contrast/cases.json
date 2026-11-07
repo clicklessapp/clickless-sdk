@@ -1,0 +1,29 @@
+{
+  "contrastRatio": [
+    { "name": "black on white", "colours": ["#000000", "#ffffff"], "ratio": 21 },
+    { "name": "short forms", "colours": ["#fff", "#000"], "ratio": 21 },
+    { "name": "white on orange", "colours": ["#ffffff", "#ffa500"], "ratio": 1.97 },
+    { "name": "white on yellow", "colours": ["#ffffff", "#ffff00"], "ratio": 1.07 },
+    { "name": "white on dark blue", "colours": ["#ffffff", "#00008b"], "ratio": 15.3 },
+    { "name": "two near greys", "colours": ["#777777", "#787878"], "ratio": 1.01 },
+    { "name": "not a hex colour", "colours": ["rgb(0, 0, 0)", "#ffffff"], "ratio": 1 }
+  ],
+  "readableTextColor": [
+    { "name": "orange", "background": "#ffa500", "text": "#000000" },
+    { "name": "yellow", "background": "#ffff00", "text": "#000000" },
+    { "name": "dark blue", "background": "#00008b", "text": "#ffffff" },
+    { "name": "the accent's default blue", "background": "#1c5cab", "text": "#ffffff" },
+    { "name": "the highlight's default red", "background": "#b91c1c", "text": "#ffffff" },
+    { "name": "white", "background": "#ffffff", "text": "#000000" },
+    { "name": "transparency ignored", "background": "#1a1a1acc", "text": "#ffffff" },
+    { "name": "a colour name, read as light", "background": "red", "text": "#000000" }
+  ],
+  "ensureReadableTextColor": [
+    { "name": "white on orange turns black", "text": "#ffffff", "background": "#ffa500", "expect": "#000000" },
+    { "name": "white on dark blue stays", "text": "#ffffff", "background": "#00008b", "expect": "#ffffff" },
+    { "name": "yellow on white turns black", "text": "#ffff00", "background": "#ffffff", "expect": "#000000" },
+    { "name": "a chosen colour that reads stays", "text": "#b91c1c", "background": "#ffffff", "expect": "#b91c1c" },
+    { "name": "a lower minimum keeps white on orange", "text": "#ffffff", "background": "#ffa500", "minimumContrastRatio": 1.5, "expect": "#ffffff" },
+    { "name": "a background it cannot judge", "text": "#ffffff", "background": "rgb(0, 0, 0)", "expect": "#ffffff" }
+  ]
+}

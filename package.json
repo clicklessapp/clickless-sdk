@@ -1,0 +1,11 @@
+{
+  "name": "clickless-sdk",
+  "private": true,
+  "packageManager": "pnpm@9.8.0",
+  "scripts": {
+    "gen": "pnpm --filter @clickless/core gen",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "build": "pnpm -r build"
+  }
+}

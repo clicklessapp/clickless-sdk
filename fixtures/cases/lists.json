@@ -1,0 +1,354 @@
+[
+  {
+    "name": "a list prop is replaced whole: removing an entry",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "columns",
+        "value": [
+          "id",
+          "customer",
+          "total",
+          "date"
+        ]
+      }
+    ],
+    "expect": {
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "id",
+              "customer",
+              "total",
+              "date"
+            ],
+            "tags": [],
+            "sortBy": "date"
+          },
+          "offeredValues": {
+            "columns": [
+              "id",
+              "customer",
+              "status",
+              "total",
+              "date"
+            ],
+            "tags": [
+              "new",
+              "late",
+              "vip"
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a list prop keeps the order it is given",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "columns",
+        "value": [
+          "total",
+          "customer",
+          "id"
+        ]
+      }
+    ],
+    "expect": {
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "total",
+              "customer",
+              "id"
+            ],
+            "tags": [],
+            "sortBy": "date"
+          },
+          "offeredValues": {
+            "columns": [
+              "id",
+              "customer",
+              "status",
+              "total",
+              "date"
+            ],
+            "tags": [
+              "new",
+              "late",
+              "vip"
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a list prop with no minimum may be emptied or filled",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "tags",
+        "value": [
+          "vip",
+          "late"
+        ]
+      },
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "sortBy",
+        "value": "total"
+      }
+    ],
+    "expect": {
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "id",
+              "customer",
+              "status",
+              "total",
+              "date"
+            ],
+            "tags": [
+              "vip",
+              "late"
+            ],
+            "sortBy": "total"
+          },
+          "offeredValues": {
+            "columns": [
+              "id",
+              "customer",
+              "status",
+              "total",
+              "date"
+            ],
+            "tags": [
+              "new",
+              "late",
+              "vip"
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "resetting a component restores its list props",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "columns",
+        "value": [
+          "date"
+        ]
+      },
+      {
+        "type": "reset",
+        "id": "orders"
+      }
+    ],
+    "expect": {}
+  },
+  {
+    "name": "a list entry outside the declared values",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "columns",
+        "value": [
+          "id",
+          "price"
+        ]
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"columns\" of \"orders\" must be a list of at least 1 different entries from [\"id\",\"customer\",\"status\",\"total\",\"date\"]"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a list with a repeated entry",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "columns",
+        "value": [
+          "id",
+          "total",
+          "id"
+        ]
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"columns\" of \"orders\" must be a list of at least 1 different entries from [\"id\",\"customer\",\"status\",\"total\",\"date\"]"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a list shorter than the declared minimum",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "columns",
+        "value": []
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"columns\" of \"orders\" must be a list of at least 1 different entries from [\"id\",\"customer\",\"status\",\"total\",\"date\"]"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a single value for a list prop",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "columns",
+        "value": "id"
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"columns\" of \"orders\" must be a list of at least 1 different entries from [\"id\",\"customer\",\"status\",\"total\",\"date\"]"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a list for a single-value prop",
+    "manifest": "orders",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "orders",
+        "prop": "sortBy",
+        "value": [
+          "date"
+        ]
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"sortBy\" of \"orders\" must be one of [\"date\",\"total\"]"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a required list entry cannot be left out",
+    "manifest": "menu",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "tabs",
+        "prop": "pages",
+        "value": [
+          "home",
+          "reports",
+          "settings"
+        ]
+      }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 0,
+          "code": "invalid_value",
+          "message": "\"pages\" of \"tabs\" must be a list of at least 1 different entries from [\"home\",\"invoices\",\"reports\",\"settings\"], always including [\"invoices\"]"
+        }
+      ]
+    }
+  },
+  {
+    "name": "a required list entry can be moved, and the others hidden",
+    "manifest": "menu",
+    "operations": [
+      {
+        "type": "setProp",
+        "id": "tabs",
+        "prop": "pages",
+        "value": [
+          "reports",
+          "invoices"
+        ]
+      }
+    ],
+    "expect": {
+      "items": {
+        "tabs": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {
+            "pages": [
+              "reports",
+              "invoices"
+            ]
+          },
+          "offeredValues": {
+            "pages": [
+              "home",
+              "invoices",
+              "reports",
+              "settings"
+            ]
+          }
+        }
+      }
+    }
+  }
+]

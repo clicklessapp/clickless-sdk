@@ -1,0 +1,56 @@
+[
+  {
+    "name": "updateName",
+    "title": "Change your name",
+    "description": "Changes the signed-in user's first and last name.",
+    "mode": "write",
+    "parameters": {
+      "firstName": { "type": "text", "description": "First name", "maxLength": 5 },
+      "lastName": { "type": "text", "description": "Last name", "required": false }
+    }
+  },
+  {
+    "name": "setReminders",
+    "title": "Invoice reminders",
+    "mode": "write",
+    "parameters": {
+      "channel": { "type": "text", "values": ["email", "sms"] },
+      "daysBefore": { "type": "number", "min": 1, "max": 7, "integer": true },
+      "enabled": { "type": "boolean" }
+    }
+  },
+  {
+    "name": "setWeight",
+    "title": "Record a weight",
+    "mode": "write",
+    "parameters": {
+      "kilograms": { "type": "number", "min": 0.5 },
+      "grams": { "type": "number", "max": 999, "required": false },
+      "note": { "type": "number", "required": false }
+    }
+  },
+  {
+    "name": "updatePhoto",
+    "title": "Change your profile picture",
+    "mode": "write",
+    "parameters": {
+      "photo": { "type": "file", "accept": ["image/*"] }
+    }
+  },
+  {
+    "name": "attachDocument",
+    "title": "Attach a document",
+    "mode": "write",
+    "parameters": {
+      "document": { "type": "file" }
+    }
+  },
+  {
+    "name": "openCustomer",
+    "title": "Open a customer's record",
+    "mode": "read",
+    "parameters": {
+      "customerName": { "type": "text" }
+    }
+  }
+]

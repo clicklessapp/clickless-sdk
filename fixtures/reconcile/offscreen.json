@@ -1,0 +1,317 @@
+[
+  {
+    "name": "components that are not on screen are set aside with their settings, and ones never saved appear without being reported",
+    "manifest": "tabs-overview",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["devices", "referrers"],
+      "items": {
+        "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+        "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["visits"] }, "offeredValues": { "columns": ["name", "visits", "share"] } }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "tabs",
+        "manifestVersion": "1",
+        "order": ["revenue", "sales"],
+        "items": {
+          "revenue": { "w": 6, "h": 3, "hidden": false, "props": {} },
+          "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+        },
+        "offScreen": {
+          "order": ["revenue", "sales", "devices", "referrers"],
+          "items": {
+            "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+            "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["visits"] }, "offeredValues": { "columns": ["name", "visits", "share"] } }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "components that come back take their settings and places again, while the ones that left are set aside in the order they were last given",
+    "manifest": "tabs-analytics",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["sales", "revenue"],
+      "items": {
+        "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": true, "props": {} }
+      },
+      "offScreen": {
+        "order": ["revenue", "sales", "devices", "referrers"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["visits"] }, "offeredValues": { "columns": ["name", "visits", "share"] } }
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "tabs",
+        "manifestVersion": "1",
+        "order": ["devices", "referrers"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["visits"] }, "offeredValues": { "columns": ["name", "visits", "share"] } }
+        },
+        "offScreen": {
+          "order": ["sales", "revenue", "devices", "referrers"],
+          "items": {
+            "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+            "sales": { "w": 6, "h": 3, "hidden": true, "props": {} }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "with every component on screen nothing is left set aside",
+    "manifest": "tabs-all",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["sales", "revenue"],
+      "items": {
+        "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": true, "props": {} }
+      },
+      "offScreen": {
+        "order": ["revenue", "sales", "devices", "referrers"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["visits"] }, "offeredValues": { "columns": ["name", "visits", "share"] } }
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "tabs",
+        "manifestVersion": "1",
+        "order": ["sales", "revenue", "devices", "referrers"],
+        "items": {
+          "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+          "sales": { "w": 6, "h": 3, "hidden": true, "props": {} },
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["visits"] }, "offeredValues": { "columns": ["name", "visits", "share"] } }
+        }
+      }
+    }
+  },
+  {
+    "name": "a component that comes back under a newer version is corrected like any saved one, and its lists are topped up",
+    "manifest": "tabs-analytics-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["revenue", "sales"],
+      "items": {
+        "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": {
+        "order": ["revenue", "sales", "devices", "referrers"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["visits"] }, "offeredValues": { "columns": ["name", "visits", "share"] } }
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "adjusted", "id": "referrers" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "tabs",
+        "manifestVersion": "2",
+        "order": ["devices", "referrers"],
+        "items": {
+          "referrers": { "w": 8, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["bounce", "visits"] }, "offeredValues": { "columns": ["name", "visits", "share", "bounce"] } }
+        },
+        "offScreen": {
+          "order": ["revenue", "sales", "devices", "referrers"],
+          "items": {
+            "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+            "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a component still off screen when the version changes is kept",
+    "manifest": "tabs-overview-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["revenue", "sales"],
+      "items": {
+        "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": {
+        "order": ["revenue", "sales", "devices", "referrers"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["visits"] } }
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "tabs",
+        "manifestVersion": "2",
+        "order": ["revenue", "sales"],
+        "items": {
+          "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+          "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+        },
+        "offScreen": {
+          "order": ["revenue", "sales", "devices", "referrers"],
+          "items": {
+            "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+            "devices": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["visits"] } }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a component off screen through several versions keeps its settings and place",
+    "manifest": "tabs-overview-v3",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "2",
+      "order": ["revenue", "sales"],
+      "items": {
+        "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": {
+        "order": ["revenue", "referrers", "sales", "devices"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["visits"] } }
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "tabs",
+        "manifestVersion": "3",
+        "order": ["revenue", "sales"],
+        "items": {
+          "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+          "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+        },
+        "offScreen": {
+          "order": ["revenue", "referrers", "sales", "devices"],
+          "items": {
+            "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+            "devices": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["visits"] } }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "under a new version, new components are reported and placed after their manifest neighbour among everything known",
+    "manifest": "tabs-all",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "0",
+      "order": ["revenue"],
+      "items": {
+        "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": {
+        "order": ["devices", "revenue"],
+        "items": {
+          "devices": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["visits", "name"] } }
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "added", "id": "sales" },
+        { "type": "added", "id": "referrers" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "tabs",
+        "manifestVersion": "1",
+        "order": ["devices", "revenue", "sales", "referrers"],
+        "items": {
+          "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+          "sales": { "w": 6, "h": 3, "hidden": false, "props": {} },
+          "referrers": { "w": 6, "h": 3, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["visits", "name"] }, "offeredValues": { "columns": ["name", "visits", "share"] } }
+        }
+      }
+    }
+  },
+  {
+    "name": "a damaged record of what is off screen is repaired: repeats and ids with nothing saved dropped, the copy on screen preferred, unplaced ones put last",
+    "manifest": "tabs-overview",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["revenue", "sales"],
+      "items": {
+        "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": {
+        "order": ["ghost", "referrers", "referrers", "revenue"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["visits"] } },
+          "revenue": { "w": 4, "h": 2, "hidden": true, "props": {} }
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "tabs",
+        "manifestVersion": "1",
+        "order": ["revenue", "sales"],
+        "items": {
+          "revenue": { "w": 8, "h": 3, "hidden": false, "props": {} },
+          "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+        },
+        "offScreen": {
+          "order": ["referrers", "revenue", "sales", "devices"],
+          "items": {
+            "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+            "devices": { "w": 6, "h": 3, "hidden": false, "props": { "columns": ["visits"] } }
+          }
+        }
+      }
+    }
+  }
+]

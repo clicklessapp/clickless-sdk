@@ -1,0 +1,29 @@
+{
+  "regionId": "cards",
+  "version": "1",
+  "columns": 12,
+  "title": "Overview",
+  "components": [
+    {
+      "id": "revenue",
+      "kind": "chart",
+      "title": "Revenue",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": {} }
+    },
+    {
+      "id": "sales",
+      "kind": "card",
+      "title": "Sales",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 3, "hidden": false, "props": {} }
+    },
+    {
+      "id": "tips",
+      "kind": "card",
+      "title": "Tips",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 12, "h": 2, "hidden": true, "props": {} }
+    }
+  ]
+}

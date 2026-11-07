@@ -1,0 +1,80 @@
+[
+  {
+    "name": "a size saved for a component that no longer has one is dropped without being reported",
+    "manifest": "page",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "page",
+      "manifestVersion": "0",
+      "order": ["theme", "search", "profile", "download", "revenue", "sales", "referrers", "visitors"],
+      "items": {
+        "search": { "w": 1, "h": 1, "hidden": true, "props": {} },
+        "theme": { "w": 1, "h": 1, "hidden": false, "props": {} },
+        "profile": { "w": 1, "h": 1, "hidden": false, "props": {} },
+        "download": { "w": 2, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 3, "h": 2, "hidden": false, "props": {} },
+        "referrers": { "w": 6, "h": 4, "hidden": false, "props": {} },
+        "visitors": { "w": 6, "h": 4, "hidden": false, "props": {} }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "page",
+        "manifestVersion": "1",
+        "order": ["theme", "search", "profile", "download", "revenue", "sales", "referrers", "visitors"],
+        "items": {
+          "search": { "hidden": true, "props": {} },
+          "theme": { "hidden": false, "props": {} },
+          "profile": { "hidden": false, "props": {} },
+          "download": { "hidden": false, "props": {} },
+          "revenue": { "w": 6, "h": 3, "hidden": false, "props": {} },
+          "sales": { "w": 3, "h": 2, "hidden": false, "props": {} },
+          "referrers": { "w": 6, "h": 4, "hidden": false, "props": {} },
+          "visitors": { "w": 6, "h": 4, "hidden": false, "props": {} }
+        }
+      }
+    }
+  },
+  {
+    "name": "a component that has gained a size takes its default size without it being reported",
+    "manifest": "page",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "page",
+      "manifestVersion": "0",
+      "order": ["search", "theme", "profile", "download", "revenue", "sales", "referrers", "visitors"],
+      "items": {
+        "search": { "hidden": false, "props": {} },
+        "theme": { "hidden": false, "props": {} },
+        "profile": { "hidden": false, "props": {} },
+        "download": { "hidden": false, "props": {} },
+        "revenue": { "hidden": true, "props": {} },
+        "sales": { "hidden": false, "props": {} },
+        "referrers": { "w": 6, "h": 4, "hidden": false, "props": {} },
+        "visitors": { "w": 6, "h": 4, "hidden": false, "props": {} }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "page",
+        "manifestVersion": "1",
+        "order": ["search", "theme", "profile", "download", "revenue", "sales", "referrers", "visitors"],
+        "items": {
+          "search": { "hidden": false, "props": {} },
+          "theme": { "hidden": false, "props": {} },
+          "profile": { "hidden": false, "props": {} },
+          "download": { "hidden": false, "props": {} },
+          "revenue": { "w": 3, "h": 2, "hidden": true, "props": {} },
+          "sales": { "w": 3, "h": 2, "hidden": false, "props": {} },
+          "referrers": { "w": 6, "h": 4, "hidden": false, "props": {} },
+          "visitors": { "w": 6, "h": 4, "hidden": false, "props": {} }
+        }
+      }
+    }
+  }
+]

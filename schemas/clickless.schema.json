@@ -1,0 +1,467 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clickless.dev/schemas/clickless.schema.json",
+  "title": "Clickless",
+  "description": "Single source of truth for the manifest, layout and operation formats. The Zod (TypeScript) and Pydantic (Python) models are generated from this file.",
+  "$defs": {
+    "PropValue": {
+      "description": "A single value, or an ordered list of values for a prop declared with `multiple`.",
+      "anyOf": [
+        { "type": "string" }, { "type": "integer" }, { "type": "number" }, { "type": "boolean" },
+        { "type": "array", "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }, { "type": "number" }, { "type": "boolean" }] } }
+      ]
+    },
+    "ResizeCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minW", "maxW", "minH", "maxH"],
+      "properties": {
+        "minW": { "type": "integer", "minimum": 1, "maximum": 48 },
+        "maxW": { "type": "integer", "minimum": 1, "maximum": 48 },
+        "minH": { "type": "integer", "minimum": 1, "maximum": 200 },
+        "maxH": { "type": "integer", "minimum": 1, "maximum": 200 }
+      }
+    },
+    "ChoiceCapabilities": {
+      "description": "A prop chosen from a fixed list: one value, or with `multiple` an ordered list of them.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["values"],
+      "properties": {
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }, { "type": "number" }, { "type": "boolean" }] }
+        },
+        "multiple": {
+          "description": "The prop holds an ordered list of distinct entries from `values`, such as the visible columns of a table.",
+          "type": "boolean"
+        },
+        "min": {
+          "description": "With `multiple`, the fewest entries the list may hold. Defaults to 0.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "required": {
+          "description": "With `multiple`, entries from `values` the list must always hold, such as the tab of the page that is open. They can still be moved within the list.",
+          "type": "array",
+          "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }, { "type": "number" }, { "type": "boolean" }] }
+        }
+      }
+    },
+    "ColorCapabilities": {
+      "description": "A prop that accepts any colour, written as #rrggbb.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "color" },
+        "suggested": {
+          "description": "Colours to prefer when the user names none or asks for a brand colour. Not a restriction.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "textOn": {
+          "description": "Text is drawn on this colour, kept readable by the library: black or white, whichever reads better on it, or with `colorProp`, the colour held by that colour prop of the same component, turned black or white where it would be hard to read on this one.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "colorProp": { "type": "string" }
+          }
+        },
+        "against": {
+          "description": "The colour this one is drawn on, such as the page's, written as #rrggbb. A chosen colour that would be hard to see on it is pointed out to the user.",
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        }
+      }
+    },
+    "NumberCapabilities": {
+      "description": "A prop that accepts any number from `min` to `max`.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "min", "max"],
+      "properties": {
+        "type": { "const": "number" },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "integer": {
+          "description": "Only whole numbers are accepted.",
+          "type": "boolean"
+        }
+      }
+    },
+    "PropCapabilities": {
+      "anyOf": [
+        { "$ref": "#/$defs/ChoiceCapabilities" },
+        { "$ref": "#/$defs/ColorCapabilities" },
+        { "$ref": "#/$defs/NumberCapabilities" }
+      ]
+    },
+    "Capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["move", "hide"],
+      "properties": {
+        "move": { "type": "boolean" },
+        "hide": { "type": "boolean" },
+        "resize": { "$ref": "#/$defs/ResizeCapabilities" },
+        "props": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/PropCapabilities" }
+        }
+      }
+    },
+    "LayoutItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hidden", "props"],
+      "properties": {
+        "w": {
+          "description": "Width in columns. Absent for a component that has no size in the layout, such as a button or a menu the page places itself; such a component cannot be resized.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 48
+        },
+        "h": {
+          "description": "Height in rows. Present exactly when `w` is.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "hidden": { "type": "boolean" },
+        "props": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/PropValue" }
+        },
+        "offeredValues": {
+          "description": "For each list prop, the values the manifest offered when this layout was saved. It tells a value the user removed apart from one that did not exist yet. Maintained by the library; ignored in a component's defaults.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }, { "type": "number" }, { "type": "boolean" }] }
+          }
+        }
+      }
+    },
+    "Component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "capabilities", "defaults"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "locked": { "type": "boolean" },
+        "group": {
+          "description": "Which components share one container on the page, such as a row of cards or a menu. Components are ordered only among those in the same group, and cannot be moved out of it. Components without a group form one group of their own.",
+          "type": "string",
+          "minLength": 1
+        },
+        "capabilities": { "$ref": "#/$defs/Capabilities" },
+        "defaults": { "$ref": "#/$defs/LayoutItem" }
+      }
+    },
+    "Manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["regionId", "version", "columns", "components"],
+      "properties": {
+        "regionId": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "version": { "type": "string", "minLength": 1 },
+        "columns": {
+          "description": "How many columns the region's grid has. At most 48, as a component's width; a component is at most 200 rows high.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 48
+        },
+        "title": {
+          "description": "What users call this part of the screen, such as \"Sidebar\". It tells the planner which region a request means when one prompt is sent to several.",
+          "type": "string"
+        },
+        "grid": {
+          "description": "False when the region draws no grid of its own, and each group of components sits in a container of the page's. Otherwise every component is drawn in the region's one grid, in the layout's order.",
+          "type": "boolean"
+        },
+        "components": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Component" }
+        }
+      }
+    },
+    "OffScreen": {
+      "description": "Components the region has shown before that were not on screen when the layout was saved, such as the content of a tab that is not open. Their settings wait here and are applied again when they come back. A component a release deleted stays here too, unseen. At most 500 are kept; past that, the ones last in `order` are dropped. Maintained by the library.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["order", "items"],
+      "properties": {
+        "order": {
+          "description": "Every component, on screen or off, in one order. It is where a component that comes back is placed. The layout's own `order` is the newer of the two for the components it lists.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "items": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/LayoutItem" }
+        }
+      }
+    },
+    "Layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formatVersion", "regionId", "manifestVersion", "order", "items"],
+      "properties": {
+        "formatVersion": {
+          "const": 1,
+          "description": "The version of this layout's own shape, so a layout kept anywhere, by the engine or by the application, says how to read it."
+        },
+        "regionId": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "manifestVersion": { "type": "string", "minLength": 1 },
+        "order": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "items": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/LayoutItem" }
+        },
+        "offScreen": { "$ref": "#/$defs/OffScreen" }
+      }
+    },
+    "MoveOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id", "position"],
+      "properties": {
+        "type": { "const": "move" },
+        "id": { "type": "string" },
+        "position": { "enum": ["start", "end", "before", "after"] },
+        "targetId": { "type": "string" }
+      }
+    },
+    "ResizeOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "const": "resize" },
+        "id": { "type": "string" },
+        "w": { "type": "integer" },
+        "h": { "type": "integer" }
+      }
+    },
+    "HideOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "const": "hide" },
+        "id": { "type": "string" }
+      }
+    },
+    "ShowOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "const": "show" },
+        "id": { "type": "string" }
+      }
+    },
+    "SetPropOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id", "prop", "value"],
+      "properties": {
+        "type": { "const": "setProp" },
+        "id": { "type": "string" },
+        "prop": { "type": "string" },
+        "value": { "$ref": "#/$defs/PropValue" }
+      }
+    },
+    "ReorderOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "ids"],
+      "properties": {
+        "type": { "const": "reorder" },
+        "ids": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "ResetOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "reset" },
+        "id": { "type": "string" }
+      }
+    },
+    "Operation": {
+      "anyOf": [
+        { "$ref": "#/$defs/MoveOperation" },
+        { "$ref": "#/$defs/ResizeOperation" },
+        { "$ref": "#/$defs/HideOperation" },
+        { "$ref": "#/$defs/ShowOperation" },
+        { "$ref": "#/$defs/SetPropOperation" },
+        { "$ref": "#/$defs/ReorderOperation" },
+        { "$ref": "#/$defs/ResetOperation" }
+      ]
+    },
+    "OperationList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Operation" }
+    },
+    "TextParameter": {
+      "description": "A parameter that takes text.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "text" },
+        "description": {
+          "description": "What the value is, in words the model and the user would use, such as \"The customer's first name\".",
+          "type": "string"
+        },
+        "required": {
+          "description": "Whether a call must give it. Defaults to true; an optional one may be left out.",
+          "type": "boolean"
+        },
+        "values": {
+          "description": "The only texts accepted, such as the options of a drop-down. Absent means any text.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "maxLength": {
+          "description": "The most characters accepted.",
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "NumberParameter": {
+      "description": "A parameter that takes a number.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "number" },
+        "description": {
+          "description": "What the value is, in words the model and the user would use, such as \"The customer's first name\".",
+          "type": "string"
+        },
+        "required": {
+          "description": "Whether a call must give it. Defaults to true; an optional one may be left out.",
+          "type": "boolean"
+        },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "integer": {
+          "description": "Only whole numbers are accepted.",
+          "type": "boolean"
+        }
+      }
+    },
+    "BooleanParameter": {
+      "description": "A parameter that is true or false.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "boolean" },
+        "description": {
+          "description": "What the value is, in words the model and the user would use, such as \"The customer's first name\".",
+          "type": "string"
+        },
+        "required": {
+          "description": "Whether a call must give it. Defaults to true; an optional one may be left out.",
+          "type": "boolean"
+        }
+      }
+    },
+    "FileParameter": {
+      "description": "A parameter that takes a file the user attached, such as a photo. The file itself never leaves the browser: a call names it by its position among the attachments.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "file" },
+        "description": {
+          "description": "What the value is, in words the model and the user would use, such as \"The customer's first name\".",
+          "type": "string"
+        },
+        "required": {
+          "description": "Whether a call must give it. Defaults to true; an optional one may be left out.",
+          "type": "boolean"
+        },
+        "accept": {
+          "description": "Media types accepted, such as \"image/*\" or \"application/pdf\". Absent means any file.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "ActionParameter": {
+      "anyOf": [
+        { "$ref": "#/$defs/TextParameter" },
+        { "$ref": "#/$defs/NumberParameter" },
+        { "$ref": "#/$defs/BooleanParameter" },
+        { "$ref": "#/$defs/FileParameter" }
+      ]
+    },
+    "Action": {
+      "description": "Something the application can do for its user when asked, such as changing their name or opening a customer's record. The application carries it out itself, with the user's own sign-in.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "title", "mode", "parameters"],
+      "properties": {
+        "name": {
+          "description": "How calls name it: a letter, then up to 63 letters, digits or _.",
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        },
+        "title": {
+          "description": "What users would call it, such as \"Change your name\".",
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "description": "When to use it, for the model.",
+          "type": "string"
+        },
+        "mode": {
+          "description": "`write` changes something, and runs only once the user confirms. `read` only changes what is shown, such as opening a page, and runs at once.",
+          "enum": ["read", "write"]
+        },
+        "parameters": {
+          "description": "Named as actions are.",
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/ActionParameter" }
+        }
+      }
+    },
+    "ActionArgument": {
+      "description": "A value given for a parameter. For a file parameter, the position of the attached file, counting from 0.",
+      "anyOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }]
+    },
+    "ActionCall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "arguments"],
+      "properties": {
+        "name": { "type": "string" },
+        "arguments": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/ActionArgument" }
+        }
+      }
+    }
+  }
+}

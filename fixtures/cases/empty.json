@@ -1,0 +1,241 @@
+[
+  {
+    "name": "hiding everything that shows is refused",
+    "manifest": "cards",
+    "operations": [
+      { "type": "hide", "id": "revenue" },
+      { "type": "hide", "id": "sales" }
+    ],
+    "expect": {
+      "errors": [
+        {
+          "index": 1,
+          "code": "empty_region",
+          "message": "this would leave nothing showing in this region; at least one component must stay showing"
+        }
+      ]
+    }
+  },
+  {
+    "name": "the refusal names the last operation that hides something",
+    "manifest": "cards",
+    "operations": [
+      { "type": "hide", "id": "revenue" },
+      { "type": "hide", "id": "sales" },
+      { "type": "move", "id": "sales", "position": "start" }
+    ],
+    "expect": { "errors": [{ "index": 1, "code": "empty_region" }] }
+  },
+  {
+    "name": "hiding all but one is allowed",
+    "manifest": "cards",
+    "operations": [{ "type": "hide", "id": "revenue" }],
+    "expect": {
+      "items": { "revenue": { "w": 6, "h": 3, "hidden": true, "props": {} } }
+    }
+  },
+  {
+    "name": "only the result counts, so a component shown again later in the list keeps something showing",
+    "manifest": "cards",
+    "operations": [
+      { "type": "hide", "id": "revenue" },
+      { "type": "hide", "id": "sales" },
+      { "type": "show", "id": "sales" }
+    ],
+    "expect": {
+      "items": { "revenue": { "w": 6, "h": 3, "hidden": true, "props": {} } }
+    }
+  },
+  {
+    "name": "a component shown first lets the others be hidden",
+    "manifest": "cards",
+    "operations": [
+      { "type": "show", "id": "tips" },
+      { "type": "hide", "id": "revenue" },
+      { "type": "hide", "id": "sales" }
+    ],
+    "expect": {
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "tips": { "w": 12, "h": 2, "hidden": false, "props": {} }
+      }
+    }
+  },
+  {
+    "name": "resetting the last component that shows to one hidden by default is refused",
+    "manifest": "cards",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "cards",
+      "manifestVersion": "1",
+      "order": ["revenue", "sales", "tips"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "tips": { "w": 12, "h": 2, "hidden": false, "props": {} }
+      }
+    },
+    "operations": [{ "type": "reset", "id": "tips" }],
+    "expect": { "errors": [{ "index": 0, "code": "empty_region" }] }
+  },
+  {
+    "name": "resetting the whole region is allowed",
+    "manifest": "cards",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "cards",
+      "manifestVersion": "1",
+      "order": ["tips", "revenue", "sales"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "tips": { "w": 12, "h": 2, "hidden": false, "props": {} }
+      }
+    },
+    "operations": [{ "type": "reset" }],
+    "expect": {
+      "order": ["revenue", "sales", "tips"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} },
+        "tips": { "w": 12, "h": 2, "hidden": true, "props": {} }
+      }
+    }
+  },
+  {
+    "name": "a region with nothing showing can still be changed",
+    "manifest": "cards",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "cards",
+      "manifestVersion": "1",
+      "order": ["revenue", "sales", "tips"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "tips": { "w": 12, "h": 2, "hidden": true, "props": {} }
+      }
+    },
+    "operations": [
+      { "type": "move", "id": "tips", "position": "start" },
+      { "type": "hide", "id": "revenue" }
+    ],
+    "expect": { "order": ["tips", "revenue", "sales"] }
+  },
+  {
+    "name": "a region that shows nothing by default may be left showing nothing",
+    "manifest": "extras",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "extras",
+      "manifestVersion": "1",
+      "order": ["tips", "news"],
+      "items": {
+        "tips": { "w": 6, "h": 2, "hidden": false, "props": {} },
+        "news": { "w": 6, "h": 2, "hidden": true, "props": {} }
+      }
+    },
+    "operations": [{ "type": "hide", "id": "tips" }],
+    "expect": {
+      "items": { "tips": { "w": 6, "h": 2, "hidden": true, "props": {} } }
+    }
+  },
+  {
+    "name": "components that cannot be hidden keep the region from being empty",
+    "manifest": "dashboard",
+    "operations": [
+      { "type": "hide", "id": "revenue" },
+      { "type": "hide", "id": "txns" }
+    ],
+    "expect": {
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": true, "props": { "chartType": "bar" } },
+        "txns": { "w": 6, "h": 3, "hidden": true, "props": { "density": "comfortable", "pageSize": 10 } }
+      }
+    }
+  },
+  {
+    "name": "what is off screen does not count as showing",
+    "manifest": "tabs-overview",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["revenue", "sales"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": {
+        "order": ["revenue", "referrers", "sales"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} }
+        }
+      }
+    },
+    "operations": [
+      { "type": "hide", "id": "sales" },
+      { "type": "hide", "id": "revenue" }
+    ],
+    "expect": { "errors": [{ "index": 1, "code": "empty_region" }] }
+  },
+  {
+    "name": "sections the page sizes itself do not keep a region with sized sections from being empty",
+    "manifest": "page",
+    "operations": [
+      { "type": "hide", "id": "revenue" },
+      { "type": "hide", "id": "sales" },
+      { "type": "hide", "id": "referrers" },
+      { "type": "hide", "id": "visitors" }
+    ],
+    "expect": { "errors": [{ "index": 3, "code": "empty_region" }] }
+  },
+  {
+    "name": "every section the page sizes itself may be hidden while a sized one shows",
+    "manifest": "page",
+    "operations": [
+      { "type": "hide", "id": "search" },
+      { "type": "hide", "id": "theme" },
+      { "type": "hide", "id": "download" },
+      { "type": "hide", "id": "revenue" },
+      { "type": "hide", "id": "sales" },
+      { "type": "hide", "id": "referrers" }
+    ],
+    "expect": {
+      "items": {
+        "search": { "hidden": true, "props": {} },
+        "theme": { "hidden": true, "props": {} },
+        "download": { "hidden": true, "props": {} },
+        "revenue": { "w": 3, "h": 2, "hidden": true, "props": {} },
+        "sales": { "w": 3, "h": 2, "hidden": true, "props": {} },
+        "referrers": { "w": 6, "h": 4, "hidden": true, "props": {} }
+      }
+    }
+  },
+  {
+    "name": "a region with no sized sections keeps one of the others showing",
+    "manifest": "toolbar",
+    "operations": [
+      { "type": "hide", "id": "search" },
+      { "type": "hide", "id": "download" }
+    ],
+    "expect": { "errors": [{ "index": 1, "code": "empty_region" }] }
+  },
+  {
+    "name": "with no sized section showing, the last of the others still stays",
+    "manifest": "notices",
+    "operations": [{ "type": "hide", "id": "help" }],
+    "expect": { "errors": [{ "index": 0, "code": "empty_region" }] }
+  },
+  {
+    "name": "an invalid list is refused for its own errors before the result is looked at",
+    "manifest": "cards",
+    "operations": [
+      { "type": "hide", "id": "revenue" },
+      { "type": "hide", "id": "sales" },
+      { "type": "hide", "id": "ghost" }
+    ],
+    "expect": { "errors": [{ "index": 2, "code": "unknown_component" }] }
+  }
+]

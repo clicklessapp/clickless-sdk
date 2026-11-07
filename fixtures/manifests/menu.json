@@ -1,0 +1,30 @@
+{
+  "regionId": "menu",
+  "version": "1",
+  "columns": 12,
+  "components": [
+    {
+      "id": "tabs",
+      "kind": "navigation",
+      "title": "Page tabs",
+      "capabilities": {
+        "move": false,
+        "hide": false,
+        "props": {
+          "pages": {
+            "values": ["home", "invoices", "reports", "settings"],
+            "multiple": true,
+            "min": 1,
+            "required": ["invoices"]
+          }
+        }
+      },
+      "defaults": {
+        "w": 12,
+        "h": 1,
+        "hidden": false,
+        "props": { "pages": ["home", "invoices", "reports", "settings"] }
+      }
+    }
+  ]
+}

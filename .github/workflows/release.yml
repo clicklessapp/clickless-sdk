@@ -1,0 +1,67 @@
+# Publishes @clickless/react to npm when a tag such as v0.1.0 is pushed, from
+# this repository's CI, with provenance: npm then shows the package was built
+# here, from that tag's commit.
+#
+# Authentication: npm trusted publishing (set up on the package's npm settings
+# page for this repository and this workflow file), or, until then, an npm
+# token in the NPM_TOKEN secret.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          check-latest: true
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - name: Check the tag matches the package's version
+        run: |
+          version="$(node -p 'require("./packages/react/package.json").version')"
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "The tag is $GITHUB_REF_NAME but packages/react/package.json says $version." >&2
+            exit 1
+          fi
+      - run: pnpm typecheck
+      - run: pnpm test
+      # npm accepts a package with provenance only when its repository field
+      # names the repository it was built in, so it is set from this one.
+      - name: Point the package at this repository
+        working-directory: packages/react
+        run: |
+          npm pkg set \
+            repository.type=git \
+            "repository.url=git+https://github.com/${GITHUB_REPOSITORY}.git" \
+            repository.directory=packages/react \
+            "homepage=https://github.com/${GITHUB_REPOSITORY}/tree/main/packages/react#readme" \
+            "bugs.url=https://github.com/${GITHUB_REPOSITORY}/issues"
+      # pnpm pack writes the package.json npm receives: publishConfig's entry
+      # points and the workspace versions filled in.
+      - name: Build and pack
+        working-directory: packages/react
+        run: |
+          pnpm build
+          pnpm pack --pack-destination "$RUNNER_TEMP"
+      - name: Publish
+        run: npm publish "$RUNNER_TEMP"/clickless-react-*.tgz --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,21 @@
+{
+  "regionId": "notices",
+  "version": "1",
+  "columns": 12,
+  "components": [
+    {
+      "id": "help",
+      "kind": "button",
+      "title": "Help",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "hidden": false, "props": {} }
+    },
+    {
+      "id": "tips",
+      "kind": "card",
+      "title": "Tips",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 12, "h": 2, "hidden": true, "props": {} }
+    }
+  ]
+}

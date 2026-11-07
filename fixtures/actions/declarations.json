@@ -1,0 +1,42 @@
+[
+  {
+    "name": "the profile actions can be offered",
+    "actions": "profile-actions",
+    "accepted": true
+  },
+  {
+    "name": "two actions with one name",
+    "actions": [
+      { "name": "openCustomer", "title": "Open a record", "mode": "read", "parameters": {} },
+      { "name": "openCustomer", "title": "Open a record again", "mode": "read", "parameters": {} }
+    ],
+    "accepted": false,
+    "message": "two actions are named \"openCustomer\""
+  },
+  {
+    "name": "a parameter name a call could not use",
+    "actions": [
+      { "name": "updateName", "title": "Change your name", "mode": "write", "parameters": { "first name": { "type": "text" } } }
+    ],
+    "accepted": false,
+    "message": "\"updateName\" has a parameter named \"first name\": a parameter name is a letter, then up to 63 letters, digits or _"
+  },
+  {
+    "name": "a number range that holds nothing",
+    "actions": [
+      { "name": "setWeight", "title": "Record a weight", "mode": "write", "parameters": { "kilograms": { "type": "number", "min": 5, "max": 1 } } }
+    ],
+    "accepted": false,
+    "message": "\"kilograms\" of \"setWeight\" has a min above its max"
+  },
+  {
+    "name": "an action name a call could not use is refused by the schema",
+    "actions": [{ "name": "open-customer", "title": "Open a record", "mode": "read", "parameters": {} }],
+    "accepted": false
+  },
+  {
+    "name": "an action must say whether it changes anything",
+    "actions": [{ "name": "openCustomer", "title": "Open a record", "parameters": {} }],
+    "accepted": false
+  }
+]

@@ -1,0 +1,68 @@
+{
+  "regionId": "styles",
+  "version": "2",
+  "columns": 12,
+  "components": [
+    {
+      "id": "table",
+      "kind": "table",
+      "title": "Orders",
+      "capabilities": {
+        "move": true,
+        "hide": true,
+        "props": {
+          "accent": {
+            "type": "color",
+            "suggested": [
+              "#1c5cab",
+              "#b91c1c"
+            ]
+          },
+          "rows": {
+            "type": "number",
+            "min": 5,
+            "max": 25,
+            "integer": true
+          },
+          "opacity": {
+            "type": "number",
+            "min": 0,
+            "max": 1
+          },
+          "stripes": {
+            "values": [
+              "none",
+              "grey"
+            ]
+          }
+        }
+      },
+      "defaults": {
+        "w": 12,
+        "h": 4,
+        "hidden": false,
+        "props": {
+          "accent": "#1c5cab",
+          "rows": 10,
+          "opacity": 1,
+          "stripes": "none"
+        }
+      }
+    },
+    {
+      "id": "note",
+      "kind": "card",
+      "title": "Note",
+      "capabilities": {
+        "move": true,
+        "hide": true
+      },
+      "defaults": {
+        "w": 12,
+        "h": 1,
+        "hidden": false,
+        "props": {}
+      }
+    }
+  ]
+}

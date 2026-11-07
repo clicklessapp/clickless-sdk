@@ -1,0 +1,652 @@
+[
+  {
+    "name": "entries no longer offered are dropped, and a new default entry is added beside its neighbour",
+    "manifest": "orders-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "orders",
+      "manifestVersion": "1",
+      "order": [
+        "orders",
+        "summary"
+      ],
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "total",
+              "status",
+              "customer"
+            ],
+            "tags": [
+              "vip"
+            ],
+            "sortBy": "total"
+          },
+          "offeredValues": {
+            "columns": [
+              "id",
+              "customer",
+              "status",
+              "total",
+              "date"
+            ],
+            "tags": [
+              "new",
+              "late",
+              "vip"
+            ]
+          }
+        },
+        "summary": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        {
+          "type": "adjusted",
+          "id": "orders"
+        }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "orders",
+        "manifestVersion": "2",
+        "order": [
+          "orders",
+          "summary"
+        ],
+        "items": {
+          "orders": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "columns": [
+                "total",
+                "region",
+                "customer"
+              ],
+              "tags": [
+                "vip"
+              ],
+              "sortBy": "total"
+            },
+            "offeredValues": {
+              "columns": [
+                "id",
+                "customer",
+                "total",
+                "date",
+                "region"
+              ],
+              "tags": [
+                "new",
+                "late",
+                "vip"
+              ]
+            }
+          },
+          "summary": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "without a record of what was offered nothing is added, and a list left too short goes back to the default",
+    "manifest": "orders-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "orders",
+      "manifestVersion": "1",
+      "order": [
+        "orders",
+        "summary"
+      ],
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "status"
+            ],
+            "tags": [],
+            "sortBy": "date"
+          }
+        },
+        "summary": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        {
+          "type": "adjusted",
+          "id": "orders"
+        }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "orders",
+        "manifestVersion": "2",
+        "order": [
+          "orders",
+          "summary"
+        ],
+        "items": {
+          "orders": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "columns": [
+                "id",
+                "customer",
+                "total",
+                "date",
+                "region"
+              ],
+              "tags": [],
+              "sortBy": "date"
+            },
+            "offeredValues": {
+              "columns": [
+                "id",
+                "customer",
+                "total",
+                "date",
+                "region"
+              ],
+              "tags": [
+                "new",
+                "late",
+                "vip"
+              ]
+            }
+          },
+          "summary": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a list that still fits is kept, and a repeated or mistyped list is repaired",
+    "manifest": "orders",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "orders",
+      "manifestVersion": "1",
+      "order": [
+        "orders",
+        "summary"
+      ],
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "date",
+              "id",
+              "date"
+            ],
+            "tags": "vip",
+            "sortBy": [
+              "date"
+            ]
+          }
+        },
+        "summary": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        {
+          "type": "adjusted",
+          "id": "orders"
+        }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "orders",
+        "manifestVersion": "1",
+        "order": [
+          "orders",
+          "summary"
+        ],
+        "items": {
+          "orders": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "columns": [
+                "date",
+                "id"
+              ],
+              "tags": [],
+              "sortBy": "date"
+            },
+            "offeredValues": {
+              "columns": [
+                "id",
+                "customer",
+                "status",
+                "total",
+                "date"
+              ],
+              "tags": [
+                "new",
+                "late",
+                "vip"
+              ]
+            }
+          },
+          "summary": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a new entry shown by default appears without being reported; hidden entries stay hidden and non-default ones stay out",
+    "manifest": "orders-v3",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "orders",
+      "manifestVersion": "1",
+      "order": [
+        "orders",
+        "summary"
+      ],
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "date",
+              "id"
+            ],
+            "tags": [],
+            "sortBy": "date"
+          },
+          "offeredValues": {
+            "columns": [
+              "id",
+              "customer",
+              "status",
+              "total",
+              "date"
+            ],
+            "tags": [
+              "new",
+              "late",
+              "vip"
+            ]
+          }
+        },
+        "summary": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "orders",
+        "manifestVersion": "3",
+        "order": [
+          "orders",
+          "summary"
+        ],
+        "items": {
+          "orders": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "columns": [
+                "date",
+                "region",
+                "id"
+              ],
+              "tags": [],
+              "sortBy": "date"
+            },
+            "offeredValues": {
+              "columns": [
+                "id",
+                "customer",
+                "status",
+                "total",
+                "date",
+                "region",
+                "internalNote"
+              ],
+              "tags": [
+                "new",
+                "late",
+                "vip"
+              ]
+            }
+          },
+          "summary": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a new default entry with no earlier neighbour in the list goes first",
+    "manifest": "orders-v3",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "orders",
+      "manifestVersion": "1",
+      "order": [
+        "orders",
+        "summary"
+      ],
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "total"
+            ],
+            "tags": [],
+            "sortBy": "date"
+          },
+          "offeredValues": {
+            "columns": [
+              "customer",
+              "status",
+              "total",
+              "date",
+              "region",
+              "internalNote"
+            ],
+            "tags": [
+              "new",
+              "late",
+              "vip"
+            ]
+          }
+        },
+        "summary": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "orders",
+        "manifestVersion": "3",
+        "order": [
+          "orders",
+          "summary"
+        ],
+        "items": {
+          "orders": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "columns": [
+                "id",
+                "total"
+              ],
+              "tags": [],
+              "sortBy": "date"
+            },
+            "offeredValues": {
+              "columns": [
+                "id",
+                "customer",
+                "status",
+                "total",
+                "date",
+                "region",
+                "internalNote"
+              ],
+              "tags": [
+                "new",
+                "late",
+                "vip"
+              ]
+            }
+          },
+          "summary": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "an entry the user removed is not added back",
+    "manifest": "orders-v3",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "orders",
+      "manifestVersion": "3",
+      "order": [
+        "orders",
+        "summary"
+      ],
+      "items": {
+        "orders": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "columns": [
+              "id",
+              "total"
+            ],
+            "tags": [],
+            "sortBy": "date"
+          },
+          "offeredValues": {
+            "columns": [
+              "id",
+              "customer",
+              "status",
+              "total",
+              "date",
+              "region",
+              "internalNote"
+            ],
+            "tags": [
+              "new",
+              "late",
+              "vip"
+            ]
+          }
+        },
+        "summary": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "orders",
+        "manifestVersion": "3",
+        "order": [
+          "orders",
+          "summary"
+        ],
+        "items": {
+          "orders": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "columns": [
+                "id",
+                "total"
+              ],
+              "tags": [],
+              "sortBy": "date"
+            },
+            "offeredValues": {
+              "columns": [
+                "id",
+                "customer",
+                "status",
+                "total",
+                "date",
+                "region",
+                "internalNote"
+              ],
+              "tags": [
+                "new",
+                "late",
+                "vip"
+              ]
+            }
+          },
+          "summary": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "an entry that became required goes back beside its neighbour in the defaults",
+    "manifest": "menu-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "menu",
+      "manifestVersion": "1",
+      "order": [
+        "tabs"
+      ],
+      "items": {
+        "tabs": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {
+            "pages": [
+              "settings",
+              "home",
+              "invoices"
+            ]
+          },
+          "offeredValues": {
+            "pages": [
+              "home",
+              "invoices",
+              "reports",
+              "settings"
+            ]
+          }
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        {
+          "type": "adjusted",
+          "id": "tabs"
+        }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "menu",
+        "manifestVersion": "2",
+        "order": [
+          "tabs"
+        ],
+        "items": {
+          "tabs": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {
+              "pages": [
+                "settings",
+                "home",
+                "invoices",
+                "reports"
+              ]
+            },
+            "offeredValues": {
+              "pages": [
+                "home",
+                "invoices",
+                "reports",
+                "settings"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "regionId": "extras",
+  "version": "1",
+  "columns": 12,
+  "components": [
+    {
+      "id": "tips",
+      "kind": "card",
+      "title": "Tips",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 2, "hidden": true, "props": {} }
+    },
+    {
+      "id": "news",
+      "kind": "card",
+      "title": "News",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 6, "h": 2, "hidden": true, "props": {} }
+    }
+  ]
+}

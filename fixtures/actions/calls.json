@@ -1,0 +1,132 @@
+[
+  {
+    "name": "a valid call to each action",
+    "actions": "profile-actions",
+    "attachedFiles": [{ "type": "image/png" }, { "type": "application/pdf" }],
+    "calls": [
+      { "name": "updateName", "arguments": { "firstName": "Josh", "lastName": "King" } },
+      { "name": "setReminders", "arguments": { "channel": "sms", "daysBefore": 3, "enabled": true } },
+      { "name": "setWeight", "arguments": { "kilograms": 12.5, "grams": -3 } },
+      { "name": "updatePhoto", "arguments": { "photo": 0 } },
+      { "name": "attachDocument", "arguments": { "document": 1 } },
+      { "name": "openCustomer", "arguments": { "customerName": "Bella" } }
+    ],
+    "expect": { "errors": [] }
+  },
+  {
+    "name": "an optional parameter may be left out, and a required one may not",
+    "actions": "profile-actions",
+    "calls": [
+      { "name": "updateName", "arguments": { "firstName": "Josh" } },
+      { "name": "updateName", "arguments": { "lastName": "King" } }
+    ],
+    "expect": {
+      "errors": [{ "index": 1, "code": "missing_argument", "message": "\"updateName\" needs \"firstName\"" }]
+    }
+  },
+  {
+    "name": "an action that was not declared",
+    "actions": "profile-actions",
+    "calls": [{ "name": "deleteAccount", "arguments": {} }],
+    "expect": {
+      "errors": [{ "index": 0, "code": "unknown_action", "message": "there is no action \"deleteAccount\"" }]
+    }
+  },
+  {
+    "name": "an argument the action does not declare is reported before a missing one",
+    "actions": "profile-actions",
+    "calls": [{ "name": "updateName", "arguments": { "middleName": "J" } }],
+    "expect": {
+      "errors": [{ "index": 0, "code": "unknown_argument", "message": "\"updateName\" has no parameter \"middleName\"" }]
+    }
+  },
+  {
+    "name": "only one error is reported for a call, the first in the action's own order",
+    "actions": "profile-actions",
+    "calls": [{ "name": "setReminders", "arguments": { "enabled": "yes", "channel": "post" } }],
+    "expect": {
+      "errors": [{ "index": 0, "code": "invalid_argument", "message": "\"channel\" of \"setReminders\" must be one of [\"email\",\"sms\"]" }]
+    }
+  },
+  {
+    "name": "text must not be blank, and is measured in characters",
+    "actions": "profile-actions",
+    "calls": [
+      { "name": "updateName", "arguments": { "firstName": "   " } },
+      { "name": "updateName", "arguments": { "firstName": "Joshua" } },
+      { "name": "updateName", "arguments": { "firstName": "😀😀😀😀😀" } },
+      { "name": "updateName", "arguments": { "firstName": 5 } }
+    ],
+    "expect": {
+      "errors": [
+        { "index": 0, "code": "invalid_argument", "message": "\"firstName\" of \"updateName\" must be some text of at most 5 characters" },
+        { "index": 1, "code": "invalid_argument" },
+        { "index": 3, "code": "invalid_argument" }
+      ]
+    }
+  },
+  {
+    "name": "numbers are held to their range and to whole numbers, and true is not a number",
+    "actions": "profile-actions",
+    "calls": [
+      { "name": "setReminders", "arguments": { "channel": "email", "daysBefore": 8, "enabled": false } },
+      { "name": "setReminders", "arguments": { "channel": "email", "daysBefore": 2.5, "enabled": false } },
+      { "name": "setReminders", "arguments": { "channel": "email", "daysBefore": 2.0, "enabled": false } },
+      { "name": "setReminders", "arguments": { "channel": "email", "daysBefore": true, "enabled": false } },
+      { "name": "setReminders", "arguments": { "channel": "email", "daysBefore": 1, "enabled": 0 } }
+    ],
+    "expect": {
+      "errors": [
+        { "index": 0, "code": "invalid_argument", "message": "\"daysBefore\" of \"setReminders\" must be a whole number from 1 to 7" },
+        { "index": 1, "code": "invalid_argument" },
+        { "index": 3, "code": "invalid_argument" },
+        { "index": 4, "code": "invalid_argument", "message": "\"enabled\" of \"setReminders\" must be true or false" }
+      ]
+    }
+  },
+  {
+    "name": "a range open at one end says so",
+    "actions": "profile-actions",
+    "calls": [
+      { "name": "setWeight", "arguments": { "kilograms": 0.25 } },
+      { "name": "setWeight", "arguments": { "kilograms": 1, "grams": 1000 } },
+      { "name": "setWeight", "arguments": { "kilograms": 1, "note": "heavy" } }
+    ],
+    "expect": {
+      "errors": [
+        { "index": 0, "code": "invalid_argument", "message": "\"kilograms\" of \"setWeight\" must be a number of at least 0.5" },
+        { "index": 1, "code": "invalid_argument", "message": "\"grams\" of \"setWeight\" must be a number of at most 999" },
+        { "index": 2, "code": "invalid_argument", "message": "\"note\" of \"setWeight\" must be a number" }
+      ]
+    }
+  },
+  {
+    "name": "a file is named by its place among the files attached, and must be of a type accepted",
+    "actions": "profile-actions",
+    "attachedFiles": [{ "type": "application/pdf" }, { "type": "IMAGE/JPEG" }],
+    "calls": [
+      { "name": "updatePhoto", "arguments": { "photo": 0 } },
+      { "name": "updatePhoto", "arguments": { "photo": 1 } },
+      { "name": "updatePhoto", "arguments": { "photo": 2 } },
+      { "name": "updatePhoto", "arguments": { "photo": "0" } },
+      { "name": "attachDocument", "arguments": { "document": 0.5 } },
+      { "name": "attachDocument", "arguments": { "document": -1 } },
+      { "name": "attachDocument", "arguments": { "document": 1 } }
+    ],
+    "expect": {
+      "errors": [
+        { "index": 0, "code": "invalid_argument", "message": "\"photo\" of \"updatePhoto\" must be an attached file of type image/*" },
+        { "index": 2, "code": "invalid_argument" },
+        { "index": 3, "code": "invalid_argument" },
+        { "index": 4, "code": "invalid_argument", "message": "\"document\" of \"attachDocument\" must be an attached file" },
+        { "index": 5, "code": "invalid_argument" }
+      ]
+    }
+  },
+  {
+    "name": "with no file attached, a file parameter can take nothing",
+    "actions": "profile-actions",
+    "calls": [{ "name": "updatePhoto", "arguments": { "photo": 0 } }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_argument" }] }
+  }
+]

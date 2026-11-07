@@ -1,0 +1,22 @@
+{
+  "regionId": "toolbar",
+  "version": "1",
+  "columns": 12,
+  "grid": false,
+  "components": [
+    {
+      "id": "search",
+      "kind": "search",
+      "title": "Search",
+      "capabilities": { "move": false, "hide": true },
+      "defaults": { "hidden": false, "props": {} }
+    },
+    {
+      "id": "download",
+      "kind": "button",
+      "title": "Download",
+      "capabilities": { "move": false, "hide": true },
+      "defaults": { "hidden": false, "props": {} }
+    }
+  ]
+}

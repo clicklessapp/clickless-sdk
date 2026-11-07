@@ -1,0 +1,88 @@
+[
+  {
+    "name": "operations leave what is off screen as it was",
+    "manifest": "tabs-overview",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["revenue", "sales"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": {
+        "order": ["revenue", "referrers", "sales", "devices"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} },
+          "devices": { "w": 6, "h": 3, "hidden": true, "props": { "columns": ["visits"] } }
+        }
+      }
+    },
+    "operations": [
+      { "type": "move", "id": "sales", "position": "start" },
+      { "type": "resize", "id": "revenue", "w": 12 },
+      { "type": "reset", "id": "sales" }
+    ],
+    "expect": {
+      "order": ["sales", "revenue"],
+      "items": {
+        "revenue": { "w": 12, "h": 3, "hidden": false, "props": {} }
+      }
+    }
+  },
+  {
+    "name": "resetting the whole region also forgets what is off screen",
+    "manifest": "tabs-overview",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["sales", "revenue"],
+      "items": {
+        "revenue": { "w": 12, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": true, "props": {} }
+      },
+      "offScreen": {
+        "order": ["sales", "referrers", "revenue"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} }
+        }
+      }
+    },
+    "operations": [{ "type": "reset" }, { "type": "hide", "id": "revenue" }],
+    "expect": {
+      "order": ["revenue", "sales"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": true, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": null
+    }
+  },
+  {
+    "name": "a component that is off screen cannot be changed",
+    "manifest": "tabs-overview",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "tabs",
+      "manifestVersion": "1",
+      "order": ["revenue", "sales"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": {} },
+        "sales": { "w": 6, "h": 3, "hidden": false, "props": {} }
+      },
+      "offScreen": {
+        "order": ["revenue", "sales", "referrers"],
+        "items": {
+          "referrers": { "w": 12, "h": 4, "hidden": false, "props": {} }
+        }
+      }
+    },
+    "operations": [
+      { "type": "hide", "id": "referrers" },
+      { "type": "move", "id": "sales", "position": "after", "targetId": "referrers" }
+    ],
+    "expect": { "errors": [{ "index": 0, "code": "unknown_component", "message": "no component \"referrers\" in this region" }, { "index": 1, "code": "unknown_component", "message": "no component \"referrers\" in this region" }] }
+  }
+]

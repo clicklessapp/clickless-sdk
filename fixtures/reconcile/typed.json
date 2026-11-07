@@ -1,0 +1,269 @@
+[
+  {
+    "name": "valid colours and numbers are kept",
+    "manifest": "styles-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "styles",
+      "manifestVersion": "1",
+      "order": [
+        "table",
+        "note"
+      ],
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#7B2FF7",
+            "rows": 20,
+            "opacity": 0.5,
+            "stripes": "grey"
+          }
+        },
+        "note": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "styles",
+        "manifestVersion": "2",
+        "order": [
+          "table",
+          "note"
+        ],
+        "items": {
+          "table": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "accent": "#7B2FF7",
+              "rows": 20,
+              "opacity": 0.5,
+              "stripes": "grey"
+            }
+          },
+          "note": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a number outside a tightened range is moved to the nearest limit",
+    "manifest": "styles-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "styles",
+      "manifestVersion": "1",
+      "order": [
+        "table",
+        "note"
+      ],
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#1c5cab",
+            "rows": 40,
+            "opacity": 1,
+            "stripes": "none"
+          }
+        },
+        "note": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        {
+          "type": "adjusted",
+          "id": "table"
+        }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "styles",
+        "manifestVersion": "2",
+        "order": [
+          "table",
+          "note"
+        ],
+        "items": {
+          "table": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "accent": "#1c5cab",
+              "rows": 25,
+              "opacity": 1,
+              "stripes": "none"
+            }
+          },
+          "note": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "values of the wrong kind go back to the defaults",
+    "manifest": "styles-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "styles",
+      "manifestVersion": "1",
+      "order": [
+        "table",
+        "note"
+      ],
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "purple",
+            "rows": "ten",
+            "opacity": true,
+            "stripes": "none"
+          }
+        },
+        "note": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        {
+          "type": "adjusted",
+          "id": "table"
+        }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "styles",
+        "manifestVersion": "2",
+        "order": [
+          "table",
+          "note"
+        ],
+        "items": {
+          "table": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "accent": "#1c5cab",
+              "rows": 10,
+              "opacity": 1,
+              "stripes": "none"
+            }
+          },
+          "note": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a fraction saved for a whole-number prop goes back to the default",
+    "manifest": "styles-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "styles",
+      "manifestVersion": "1",
+      "order": [
+        "table",
+        "note"
+      ],
+      "items": {
+        "table": {
+          "w": 12,
+          "h": 4,
+          "hidden": false,
+          "props": {
+            "accent": "#000000",
+            "rows": 12.5,
+            "opacity": -2,
+            "stripes": "none"
+          }
+        },
+        "note": {
+          "w": 12,
+          "h": 1,
+          "hidden": false,
+          "props": {}
+        }
+      }
+    },
+    "expect": {
+      "changes": [
+        {
+          "type": "adjusted",
+          "id": "table"
+        }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "styles",
+        "manifestVersion": "2",
+        "order": [
+          "table",
+          "note"
+        ],
+        "items": {
+          "table": {
+            "w": 12,
+            "h": 4,
+            "hidden": false,
+            "props": {
+              "accent": "#000000",
+              "rows": 10,
+              "opacity": 0,
+              "stripes": "none"
+            }
+          },
+          "note": {
+            "w": 12,
+            "h": 1,
+            "hidden": false,
+            "props": {}
+          }
+        }
+      }
+    }
+  }
+]

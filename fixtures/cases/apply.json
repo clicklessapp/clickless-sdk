@@ -1,0 +1,277 @@
+[
+  {
+    "name": "empty operation list leaves the layout unchanged",
+    "manifest": "dashboard",
+    "operations": [],
+    "expect": {}
+  },
+  {
+    "name": "move to end",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "revenue", "position": "end" }],
+    "expect": { "order": ["balance", "txns", "alerts", "notes", "revenue"] }
+  },
+  {
+    "name": "move to start",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "notes", "position": "start" }],
+    "expect": { "order": ["notes", "balance", "revenue", "txns", "alerts"] }
+  },
+  {
+    "name": "move before a target",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "txns", "position": "before", "targetId": "revenue" }],
+    "expect": { "order": ["balance", "txns", "revenue", "alerts", "notes"] }
+  },
+  {
+    "name": "move after a target that sits later in the order",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "revenue", "position": "after", "targetId": "txns" }],
+    "expect": { "order": ["balance", "txns", "revenue", "alerts", "notes"] }
+  },
+  {
+    "name": "a locked component may be used as a move target",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "notes", "position": "after", "targetId": "balance" }],
+    "expect": { "order": ["balance", "notes", "revenue", "txns", "alerts"] }
+  },
+  {
+    "name": "targetId is ignored for start and end",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "txns", "position": "end", "targetId": "revenue" }],
+    "expect": { "order": ["balance", "revenue", "alerts", "notes", "txns"] }
+  },
+  {
+    "name": "resize width and height",
+    "manifest": "dashboard",
+    "operations": [{ "type": "resize", "id": "revenue", "w": 12, "h": 4 }],
+    "expect": {
+      "items": { "revenue": { "w": 12, "h": 4, "hidden": false, "props": { "chartType": "bar" } } }
+    }
+  },
+  {
+    "name": "resize height only keeps the width",
+    "manifest": "dashboard",
+    "operations": [{ "type": "resize", "id": "txns", "h": 8 }],
+    "expect": {
+      "items": { "txns": { "w": 6, "h": 8, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } } }
+    }
+  },
+  {
+    "name": "hide and show",
+    "manifest": "dashboard",
+    "operations": [
+      { "type": "hide", "id": "revenue" },
+      { "type": "show", "id": "notes" }
+    ],
+    "expect": {
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": true, "props": { "chartType": "bar" } },
+        "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": false } }
+      }
+    }
+  },
+  {
+    "name": "hiding an already hidden component is a no-op",
+    "manifest": "dashboard",
+    "operations": [{ "type": "hide", "id": "notes" }],
+    "expect": {}
+  },
+  {
+    "name": "set string, number and boolean props",
+    "manifest": "dashboard",
+    "operations": [
+      { "type": "setProp", "id": "revenue", "prop": "chartType", "value": "line" },
+      { "type": "setProp", "id": "txns", "prop": "pageSize", "value": 25 },
+      { "type": "setProp", "id": "notes", "prop": "pinned", "value": true }
+    ],
+    "expect": {
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "line" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 25 } },
+        "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": true } }
+      }
+    }
+  },
+  {
+    "name": "reorder places the group where its earliest member was",
+    "manifest": "dashboard",
+    "operations": [{ "type": "reorder", "ids": ["notes", "txns", "revenue"] }],
+    "expect": { "order": ["balance", "notes", "txns", "revenue", "alerts"] }
+  },
+  {
+    "name": "reorder of two non-adjacent components",
+    "manifest": "dashboard",
+    "operations": [{ "type": "reorder", "ids": ["notes", "revenue"] }],
+    "expect": { "order": ["balance", "notes", "revenue", "txns", "alerts"] }
+  },
+  {
+    "name": "operations apply in sequence",
+    "manifest": "dashboard",
+    "operations": [
+      { "type": "move", "id": "revenue", "position": "start" },
+      { "type": "setProp", "id": "revenue", "prop": "chartType", "value": "area" },
+      { "type": "resize", "id": "revenue", "w": 12 },
+      { "type": "move", "id": "txns", "position": "after", "targetId": "revenue" },
+      { "type": "hide", "id": "txns" }
+    ],
+    "expect": {
+      "order": ["revenue", "txns", "balance", "alerts", "notes"],
+      "items": {
+        "revenue": { "w": 12, "h": 3, "hidden": false, "props": { "chartType": "area" } },
+        "txns": { "w": 6, "h": 3, "hidden": true, "props": { "density": "comfortable", "pageSize": 10 } }
+      }
+    }
+  },
+  {
+    "name": "a follow-up's operations after a preview's build on them: the later size wins",
+    "manifest": "dashboard",
+    "operations": [
+      { "type": "resize", "id": "revenue", "w": 8 },
+      { "type": "resize", "id": "revenue", "w": 10 }
+    ],
+    "expect": {
+      "items": { "revenue": { "w": 10, "h": 3, "hidden": false, "props": { "chartType": "bar" } } }
+    }
+  },
+  {
+    "name": "a follow-up that takes back part of a preview leaves only the rest changed",
+    "manifest": "dashboard",
+    "operations": [
+      { "type": "hide", "id": "revenue" },
+      { "type": "resize", "id": "txns", "w": 8 },
+      { "type": "show", "id": "revenue" }
+    ],
+    "expect": {
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } },
+        "txns": { "w": 8, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } }
+      }
+    }
+  },
+  {
+    "name": "reset of one component restores its defaults but keeps its position",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["revenue", "balance", "notes", "txns", "alerts"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "line" } },
+        "txns": { "w": 8, "h": 3, "hidden": false, "props": { "density": "compact", "pageSize": 50 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+      }
+    },
+    "operations": [{ "type": "reset", "id": "revenue" }],
+    "expect": {
+      "items": { "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } } }
+    }
+  },
+  {
+    "name": "reset without an id restores the whole default layout",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["revenue", "balance", "notes", "txns", "alerts"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "line" } },
+        "txns": { "w": 8, "h": 3, "hidden": false, "props": { "density": "compact", "pageSize": 50 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+      }
+    },
+    "operations": [{ "type": "reset" }],
+    "expect": {
+      "order": ["balance", "revenue", "txns", "alerts", "notes"],
+      "items": {
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+        "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+      }
+    }
+  },
+  {
+    "name": "operations after a full reset apply to the default layout",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["notes", "txns", "revenue", "balance", "alerts"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 4, "h": 2, "hidden": false, "props": { "chartType": "area" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+      }
+    },
+    "operations": [
+      { "type": "reset" },
+      { "type": "move", "id": "txns", "position": "before", "targetId": "revenue" }
+    ],
+    "expect": {
+      "order": ["balance", "txns", "revenue", "alerts", "notes"],
+      "items": { "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } } }
+    }
+  },
+  {
+    "name": "components named like something every object has start with a layout of their own",
+    "manifest": "names",
+    "operations": [],
+    "expect": {
+      "order": ["constructor", "toString", "valueOf"],
+      "items": {
+        "constructor": { "w": 6, "h": 2, "hidden": false, "props": { "toString": "short" } },
+        "toString": { "w": 6, "h": 2, "hidden": false, "props": {} },
+        "valueOf": { "w": 12, "h": 1, "hidden": false, "props": {} }
+      }
+    }
+  },
+  {
+    "name": "a component named like something every object has is hidden like any other",
+    "manifest": "names",
+    "operations": [{ "type": "hide", "id": "constructor" }],
+    "expect": {
+      "items": {
+        "constructor": { "w": 6, "h": 2, "hidden": true, "props": { "toString": "short" } }
+      }
+    }
+  },
+  {
+    "name": "a prop named like something every object has is set, and its component moved",
+    "manifest": "names",
+    "operations": [
+      { "type": "setProp", "id": "constructor", "prop": "toString", "value": "long" },
+      { "type": "move", "id": "toString", "position": "start" },
+      { "type": "hide", "id": "valueOf" }
+    ],
+    "expect": {
+      "order": ["toString", "constructor", "valueOf"],
+      "items": {
+        "constructor": { "w": 6, "h": 2, "hidden": false, "props": { "toString": "long" } },
+        "valueOf": { "w": 12, "h": 1, "hidden": true, "props": {} }
+      }
+    }
+  },
+  {
+    "name": "a region with a title of its own is changed like any other",
+    "manifest": "sidebar",
+    "operations": [
+      { "type": "move", "id": "pages", "position": "start" },
+      { "type": "hide", "id": "chats" }
+    ],
+    "expect": {
+      "order": ["pages", "general", "chats", "account"],
+      "items": {
+        "chats": { "w": 1, "h": 1, "hidden": true, "props": {} }
+      }
+    }
+  }
+]

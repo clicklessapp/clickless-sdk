@@ -1,0 +1,37 @@
+{
+  "regionId": "sidebar",
+  "version": "1",
+  "columns": 1,
+  "title": "Sidebar",
+  "components": [
+    {
+      "id": "general",
+      "kind": "menu",
+      "title": "General",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 1, "h": 1, "hidden": false, "props": {} }
+    },
+    {
+      "id": "pages",
+      "kind": "menu",
+      "title": "Pages",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 1, "h": 1, "hidden": false, "props": {} }
+    },
+    {
+      "id": "chats",
+      "kind": "link",
+      "title": "Chats",
+      "capabilities": { "move": true, "hide": true },
+      "defaults": { "w": 1, "h": 1, "hidden": false, "props": {} }
+    },
+    {
+      "id": "account",
+      "kind": "menu",
+      "title": "Account",
+      "locked": true,
+      "capabilities": { "move": false, "hide": false },
+      "defaults": { "w": 1, "h": 1, "hidden": false, "props": {} }
+    }
+  ]
+}

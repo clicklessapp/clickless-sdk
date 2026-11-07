@@ -1,0 +1,172 @@
+[
+  {
+    "name": "unknown component",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "ghost", "position": "end" }],
+    "expect": { "errors": [{ "index": 0, "code": "unknown_component", "message": "no component \"ghost\" in this region" }] }
+  },
+  {
+    "name": "unknown move target",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "revenue", "position": "before", "targetId": "ghost" }],
+    "expect": { "errors": [{ "index": 0, "code": "unknown_component", "message": "no component \"ghost\" in this region" }] }
+  },
+  {
+    "name": "unknown component in reorder",
+    "manifest": "dashboard",
+    "operations": [{ "type": "reorder", "ids": ["revenue", "ghost"] }],
+    "expect": { "errors": [{ "index": 0, "code": "unknown_component", "message": "no component \"ghost\" in this region" }] }
+  },
+  {
+    "name": "unknown component in reset",
+    "manifest": "dashboard",
+    "operations": [{ "type": "reset", "id": "ghost" }],
+    "expect": { "errors": [{ "index": 0, "code": "unknown_component", "message": "no component \"ghost\" in this region" }] }
+  },
+  {
+    "name": "locked component cannot be hidden",
+    "manifest": "dashboard",
+    "operations": [{ "type": "hide", "id": "balance" }],
+    "expect": { "errors": [{ "index": 0, "code": "locked", "message": "\"balance\" is locked and cannot be changed" }] }
+  },
+  {
+    "name": "locked component cannot be reset on its own",
+    "manifest": "dashboard",
+    "operations": [{ "type": "reset", "id": "balance" }],
+    "expect": { "errors": [{ "index": 0, "code": "locked", "message": "\"balance\" is locked and cannot be changed" }] }
+  },
+  {
+    "name": "locked component cannot be part of a reorder",
+    "manifest": "dashboard",
+    "operations": [{ "type": "reorder", "ids": ["balance", "revenue"] }],
+    "expect": { "errors": [{ "index": 0, "code": "locked", "message": "\"balance\" is locked and cannot be changed" }] }
+  },
+  {
+    "name": "move without the move capability",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "alerts", "position": "start" }],
+    "expect": { "errors": [{ "index": 0, "code": "capability_not_allowed", "message": "\"alerts\" cannot be moved" }] }
+  },
+  {
+    "name": "reorder without the move capability",
+    "manifest": "dashboard",
+    "operations": [{ "type": "reorder", "ids": ["revenue", "alerts"] }],
+    "expect": { "errors": [{ "index": 0, "code": "capability_not_allowed", "message": "\"alerts\" cannot be moved" }] }
+  },
+  {
+    "name": "hide without the hide capability",
+    "manifest": "dashboard",
+    "operations": [{ "type": "hide", "id": "alerts" }],
+    "expect": { "errors": [{ "index": 0, "code": "capability_not_allowed", "message": "\"alerts\" cannot be hidden or shown" }] }
+  },
+  {
+    "name": "show without the hide capability",
+    "manifest": "dashboard",
+    "operations": [{ "type": "show", "id": "alerts" }],
+    "expect": { "errors": [{ "index": 0, "code": "capability_not_allowed", "message": "\"alerts\" cannot be hidden or shown" }] }
+  },
+  {
+    "name": "resize without the resize capability",
+    "manifest": "dashboard",
+    "operations": [{ "type": "resize", "id": "notes", "w": 6 }],
+    "expect": { "errors": [{ "index": 0, "code": "capability_not_allowed", "message": "\"notes\" cannot be resized" }] }
+  },
+  {
+    "name": "resize below the minimum width",
+    "manifest": "dashboard",
+    "operations": [{ "type": "resize", "id": "revenue", "w": 2 }],
+    "expect": { "errors": [{ "index": 0, "code": "out_of_bounds", "message": "width of \"revenue\" must be between 4 and 12" }] }
+  },
+  {
+    "name": "resize above the maximum height",
+    "manifest": "dashboard",
+    "operations": [{ "type": "resize", "id": "txns", "h": 9 }],
+    "expect": { "errors": [{ "index": 0, "code": "out_of_bounds", "message": "height of \"txns\" must be between 2 and 8" }] }
+  },
+  {
+    "name": "resize with neither width nor height",
+    "manifest": "dashboard",
+    "operations": [{ "type": "resize", "id": "revenue" }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_operation", "message": "resize needs a width or a height" }] }
+  },
+  {
+    "name": "reorder with a repeated id",
+    "manifest": "dashboard",
+    "operations": [{ "type": "reorder", "ids": ["revenue", "revenue"] }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_operation", "message": "reorder lists the same component more than once" }] }
+  },
+  {
+    "name": "move before without a target",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "revenue", "position": "before" }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_target", "message": "move before needs a targetId" }] }
+  },
+  {
+    "name": "move relative to itself",
+    "manifest": "dashboard",
+    "operations": [{ "type": "move", "id": "revenue", "position": "after", "targetId": "revenue" }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_target", "message": "\"revenue\" cannot be moved relative to itself" }] }
+  },
+  {
+    "name": "undeclared prop",
+    "manifest": "dashboard",
+    "operations": [{ "type": "setProp", "id": "revenue", "prop": "color", "value": "red" }],
+    "expect": { "errors": [{ "index": 0, "code": "unknown_prop", "message": "\"revenue\" has no adjustable prop \"color\"" }] }
+  },
+  {
+    "name": "a prop named like something every object has is still undeclared",
+    "manifest": "dashboard",
+    "operations": [
+      { "type": "setProp", "id": "revenue", "prop": "constructor", "value": "line" },
+      { "type": "setProp", "id": "revenue", "prop": "__proto__", "value": "line" },
+      { "type": "setProp", "id": "alerts", "prop": "toString", "value": "line" }
+    ],
+    "expect": {
+      "errors": [
+        { "index": 0, "code": "unknown_prop", "message": "\"revenue\" has no adjustable prop \"constructor\"" },
+        { "index": 1, "code": "unknown_prop", "message": "\"revenue\" has no adjustable prop \"__proto__\"" },
+        { "index": 2, "code": "unknown_prop", "message": "\"alerts\" has no adjustable prop \"toString\"" }
+      ]
+    }
+  },
+  {
+    "name": "setProp on a component with no declared props",
+    "manifest": "dashboard",
+    "operations": [{ "type": "setProp", "id": "alerts", "prop": "density", "value": "compact" }],
+    "expect": { "errors": [{ "index": 0, "code": "unknown_prop", "message": "\"alerts\" has no adjustable prop \"density\"" }] }
+  },
+  {
+    "name": "prop value outside the declared values",
+    "manifest": "dashboard",
+    "operations": [{ "type": "setProp", "id": "revenue", "prop": "chartType", "value": "pie" }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_value", "message": "\"chartType\" of \"revenue\" must be one of [\"bar\",\"line\",\"area\"]" }] }
+  },
+  {
+    "name": "a numeric string does not match a number value",
+    "manifest": "dashboard",
+    "operations": [{ "type": "setProp", "id": "txns", "prop": "pageSize", "value": "25" }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_value", "message": "\"pageSize\" of \"txns\" must be one of [10,25,50]" }] }
+  },
+  {
+    "name": "the number 1 does not match the boolean true",
+    "manifest": "dashboard",
+    "operations": [{ "type": "setProp", "id": "notes", "prop": "pinned", "value": 1 }],
+    "expect": { "errors": [{ "index": 0, "code": "invalid_value", "message": "\"pinned\" of \"notes\" must be one of [true,false]" }] }
+  },
+  {
+    "name": "every invalid operation is reported and nothing is applied",
+    "manifest": "dashboard",
+    "operations": [
+      { "type": "move", "id": "revenue", "position": "end" },
+      { "type": "hide", "id": "balance" },
+      { "type": "setProp", "id": "revenue", "prop": "chartType", "value": "line" },
+      { "type": "resize", "id": "revenue", "w": 13 }
+    ],
+    "expect": {
+      "errors": [
+        { "index": 1, "code": "locked", "message": "\"balance\" is locked and cannot be changed" },
+        { "index": 3, "code": "out_of_bounds", "message": "width of \"revenue\" must be between 4 and 12" }
+      ]
+    }
+  }
+]

@@ -1,0 +1,426 @@
+[
+  {
+    "name": "a layout that already fits the manifest is returned unchanged",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["txns", "balance", "revenue", "alerts", "notes"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "line" } },
+        "txns": { "w": 8, "h": 4, "hidden": false, "props": { "density": "compact", "pageSize": 50 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "1",
+        "order": ["txns", "balance", "revenue", "alerts", "notes"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "line" } },
+          "txns": { "w": 8, "h": 4, "hidden": false, "props": { "density": "compact", "pageSize": 50 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+        }
+      }
+    }
+  },
+  {
+    "name": "a new manifest version with the same components only updates the version",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "0",
+      "order": ["balance", "revenue", "txns", "alerts", "notes"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "area" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "1",
+        "order": ["balance", "revenue", "txns", "alerts", "notes"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "area" } },
+          "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+        }
+      }
+    }
+  },
+  {
+    "name": "a setting added by a new version is filled with its default without being reported",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["txns", "balance", "revenue", "alerts", "notes"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "line" } },
+        "txns": { "w": 8, "h": 4, "hidden": false, "props": { "density": "compact" } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "1",
+        "order": ["txns", "balance", "revenue", "alerts", "notes"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "line" } },
+          "txns": { "w": 8, "h": 4, "hidden": false, "props": { "density": "compact", "pageSize": 10 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+        }
+      }
+    }
+  },
+  {
+    "name": "an untouched layout is carried to a version that adds and tightens components, and one it no longer shows is set aside",
+    "manifest": "dashboard-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["balance", "revenue", "txns", "alerts", "notes"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "adjusted", "id": "revenue" },
+        { "type": "added", "id": "forecast" },
+        { "type": "adjusted", "id": "txns" },
+        { "type": "added", "id": "summary" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "2",
+        "order": ["balance", "revenue", "forecast", "txns", "alerts", "summary"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 8, "h": 3, "hidden": false, "props": { "chartType": "line" } },
+          "forecast": { "w": 4, "h": 3, "hidden": false, "props": {} },
+          "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 25 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "summary": { "w": 12, "h": 1, "hidden": false, "props": {} }
+        },
+        "offScreen": {
+          "order": ["balance", "revenue", "forecast", "txns", "alerts", "summary", "notes"],
+          "items": {
+            "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a customised layout keeps its order and settings, and new components go after their manifest neighbour",
+    "manifest": "dashboard-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["txns", "balance", "alerts", "revenue", "notes"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "area" } },
+        "txns": { "w": 8, "h": 4, "hidden": false, "props": { "density": "compact", "pageSize": 50 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "added", "id": "forecast" },
+        { "type": "added", "id": "summary" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "2",
+        "order": ["txns", "balance", "alerts", "summary", "revenue", "forecast"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "area" } },
+          "forecast": { "w": 4, "h": 3, "hidden": false, "props": {} },
+          "txns": { "w": 8, "h": 4, "hidden": false, "props": { "density": "compact", "pageSize": 50 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "summary": { "w": 12, "h": 1, "hidden": false, "props": {} }
+        },
+        "offScreen": {
+          "order": ["txns", "balance", "alerts", "summary", "revenue", "forecast", "notes"],
+          "items": {
+            "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "a new component with no earlier neighbour in the layout goes first",
+    "manifest": "dashboard-v2",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["txns", "revenue", "alerts"],
+      "items": {
+        "revenue": { "w": 8, "h": 3, "hidden": false, "props": { "chartType": "line" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 25 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "added", "id": "balance" },
+        { "type": "added", "id": "forecast" },
+        { "type": "added", "id": "summary" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "2",
+        "order": ["balance", "txns", "revenue", "forecast", "alerts", "summary"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 8, "h": 3, "hidden": false, "props": { "chartType": "line" } },
+          "forecast": { "w": 4, "h": 3, "hidden": false, "props": {} },
+          "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 25 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "summary": { "w": 12, "h": 1, "hidden": false, "props": {} }
+        }
+      }
+    }
+  },
+  {
+    "name": "settings the user may no longer change go back to the defaults",
+    "manifest": "dashboard-restricted",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["revenue", "balance", "txns", "alerts", "notes"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 12, "h": 5, "hidden": true, "props": { "chartType": "line" } },
+        "txns": { "w": 8, "h": 4, "hidden": true, "props": { "density": "compact", "pageSize": 50 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 6, "h": 3, "hidden": false, "props": { "pinned": true, "colour": "blue" } }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "adjusted", "id": "revenue" },
+        { "type": "adjusted", "id": "txns" },
+        { "type": "adjusted", "id": "notes" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "3",
+        "order": ["revenue", "balance", "txns", "alerts", "notes"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } },
+          "txns": { "w": 8, "h": 4, "hidden": false, "props": { "density": "compact", "pageSize": 50 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true, "colour": "blue" } }
+        }
+      }
+    }
+  },
+  {
+    "name": "sizes are clamped, undeclared props dropped and missing or invalid props filled from defaults",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["balance", "revenue", "txns", "alerts", "notes"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 20, "h": 1, "hidden": false, "props": { "chartType": "bar", "colour": "red" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "pageSize": "25" } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": 0 } }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "adjusted", "id": "revenue" },
+        { "type": "adjusted", "id": "txns" },
+        { "type": "adjusted", "id": "notes" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "1",
+        "order": ["balance", "revenue", "txns", "alerts", "notes"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 12, "h": 2, "hidden": false, "props": { "chartType": "bar" } },
+          "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+        }
+      }
+    }
+  },
+  {
+    "name": "a damaged layout is repaired: repeats and ids with nothing saved dropped, unplaced items placed",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["balance", "revenue", "revenue", "ghost", "txns", "alerts"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "removed", "id": "ghost" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "1",
+        "order": ["balance", "revenue", "txns", "alerts", "notes"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "bar" } },
+          "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "notes": { "w": 4, "h": 2, "hidden": false, "props": { "pinned": true } }
+        }
+      }
+    }
+  },
+  {
+    "name": "a saved setting named like something every object has is dropped like any other undeclared one",
+    "manifest": "dashboard",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "dashboard",
+      "manifestVersion": "1",
+      "order": ["balance", "revenue", "txns", "alerts", "notes"],
+      "items": {
+        "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+        "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "line", "constructor": "line" } },
+        "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+        "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+        "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+      }
+    },
+    "expect": {
+      "changes": [
+        { "type": "adjusted", "id": "revenue" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "dashboard",
+        "manifestVersion": "1",
+        "order": ["balance", "revenue", "txns", "alerts", "notes"],
+        "items": {
+          "balance": { "w": 12, "h": 1, "hidden": false, "props": {} },
+          "revenue": { "w": 6, "h": 3, "hidden": false, "props": { "chartType": "line" } },
+          "txns": { "w": 6, "h": 3, "hidden": false, "props": { "density": "comfortable", "pageSize": 10 } },
+          "alerts": { "w": 12, "h": 2, "hidden": false, "props": {} },
+          "notes": { "w": 4, "h": 2, "hidden": true, "props": { "pinned": false } }
+        }
+      }
+    }
+  },
+  {
+    "name": "components named like something every object has are new when the layout lacks them",
+    "manifest": "names",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "names",
+      "manifestVersion": "0",
+      "order": ["valueOf"],
+      "items": { "valueOf": { "w": 12, "h": 1, "hidden": true, "props": {} } }
+    },
+    "expect": {
+      "changes": [
+        { "type": "added", "id": "constructor" },
+        { "type": "added", "id": "toString" }
+      ],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "names",
+        "manifestVersion": "1",
+        "order": ["constructor", "toString", "valueOf"],
+        "items": {
+          "constructor": { "w": 6, "h": 2, "hidden": false, "props": { "toString": "short" } },
+          "toString": { "w": 6, "h": 2, "hidden": false, "props": {} },
+          "valueOf": { "w": 12, "h": 1, "hidden": true, "props": {} }
+        }
+      }
+    }
+  },
+  {
+    "name": "a prop named like something every object has takes its default when the saved item lacks it",
+    "manifest": "names",
+    "layout": {
+      "formatVersion": 1,
+      "regionId": "names",
+      "manifestVersion": "0",
+      "order": ["toString", "constructor", "valueOf"],
+      "items": {
+        "constructor": { "w": 6, "h": 2, "hidden": true, "props": {} },
+        "toString": { "w": 6, "h": 2, "hidden": false, "props": {} },
+        "valueOf": { "w": 12, "h": 1, "hidden": false, "props": {} }
+      }
+    },
+    "expect": {
+      "changes": [],
+      "layout": {
+        "formatVersion": 1,
+        "regionId": "names",
+        "manifestVersion": "1",
+        "order": ["toString", "constructor", "valueOf"],
+        "items": {
+          "constructor": { "w": 6, "h": 2, "hidden": true, "props": { "toString": "short" } },
+          "toString": { "w": 6, "h": 2, "hidden": false, "props": {} },
+          "valueOf": { "w": 12, "h": 1, "hidden": false, "props": {} }
+        }
+      }
+    }
+  }
+]
