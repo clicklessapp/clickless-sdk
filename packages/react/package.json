@@ -1,6 +1,6 @@
 {
   "name": "@clickless/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Let the users of a React app reshape its screens and carry out its actions in plain words using text or speech, within limits you declare.",
   "keywords": [
     "react",

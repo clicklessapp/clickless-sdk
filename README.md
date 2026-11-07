@@ -29,7 +29,7 @@ This repository holds the code that runs in your application:
 
 | Path | What it is |
 | --- | --- |
-| [`packages/react`](packages/react) | `@clickless/react`, the SDK for React applications and the package you install. Its [README](packages/react/README.md) is the full guide. |
+| [`packages/react`](packages/react) | `@clickless/react`, the SDK for React applications and the package you install. Its [README](packages/react/README.md) is the overview and [GUIDE.md](packages/react/GUIDE.md) the full guide. |
 | [`packages/core`](packages/core) | The layout format and the rules for changing it, with no React and no network calls. `@clickless/react` carries it. |
 | [`schemas`](schemas) | The JSON Schema for manifests, layouts and operations, shared with the ClickLess engine. |
 | [`fixtures`](fixtures) | Cases the core and the engine both run, so the two always agree. |
@@ -43,8 +43,9 @@ repository.
 npm install @clickless/react
 ```
 
-React 18 or later is required. See [packages/react/README.md](packages/react/README.md)
-to get started.
+React 18 or later is required. The package's [README](packages/react/README.md)
+has a quick start, and its [guide](packages/react/GUIDE.md) covers everything
+you can declare.
 
 ## Working on the SDK
 
